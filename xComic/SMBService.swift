@@ -28,7 +28,6 @@ public struct NetBIOSEntry {
 
 public class SMBService: NSObject {
     public static let sharedInstance = SMBService()
-    public static let defaultFileManager = SMBFileManager()
 
     private let nameService: COpaquePointer = netbios_ns_new()
 
@@ -108,15 +107,15 @@ public class SMBService: NSObject {
             smb_session_destroy(s)
             return false
         }
-        SMBService.defaultFileManager.addSession(ipToStr(ip), session: s)
+        SMBFileManager.sharedInstance.addSession(ipToStr(ip), session: s)
         return true
     }
 
     public func disconnect(ip: UInt32) {
         let ipStr = ipToStr(ip)
-        let s = SMBService.defaultFileManager.getSession(ipStr)
+        let s = SMBFileManager.sharedInstance.getSession(ipStr)
         guard s != nil else { return }
-        SMBService.defaultFileManager.removeSession(ipStr)
+        SMBFileManager.sharedInstance.removeSession(ipStr)
         smb_session_destroy(s)
     }
 }

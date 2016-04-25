@@ -21,10 +21,12 @@ public class SMBFileManager: NSObject {
         }
     }
 
+    public static let sharedInstance = SMBFileManager()
+
     private var _currentDirectoryPath = "/"
     private var sessions = [String: SessionData]()
 
-    internal override init() {}
+    private override init() {}
 
     internal func addSession(ipStr: String, session: COpaquePointer) {
         sessions[ipStr] = SessionData(session: session)
