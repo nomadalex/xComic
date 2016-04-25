@@ -18,6 +18,9 @@
 		4B40C5131CCD95450082027B /* libdsm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B40C5111CCD95450082027B /* libdsm.a */; };
 		4B40C5141CCD95450082027B /* libtasn1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B40C5121CCD95450082027B /* libtasn1.a */; };
 		4B40C5161CCD955C0082027B /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B40C5151CCD955C0082027B /* libiconv.tbd */; };
+		4B40C51A1CCD96270082027B /* SMBFileHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B40C5171CCD96270082027B /* SMBFileHandle.swift */; };
+		4B40C51B1CCD96270082027B /* SMBFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B40C5181CCD96270082027B /* SMBFileManager.swift */; };
+		4B40C51C1CCD96270082027B /* SMBService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B40C5191CCD96270082027B /* SMBService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +61,9 @@
 		4B40C5111CCD95450082027B /* libdsm.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libdsm.a; path = libdsm/libdsm.a; sourceTree = "<group>"; };
 		4B40C5121CCD95450082027B /* libtasn1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtasn1.a; path = libdsm/libtasn1.a; sourceTree = "<group>"; };
 		4B40C5151CCD955C0082027B /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
+		4B40C5171CCD96270082027B /* SMBFileHandle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SMBFileHandle.swift; sourceTree = "<group>"; };
+		4B40C5181CCD96270082027B /* SMBFileManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SMBFileManager.swift; sourceTree = "<group>"; };
+		4B40C5191CCD96270082027B /* SMBService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SMBService.swift; sourceTree = "<group>"; };
 		6ACC86C60199AD74838038D1 /* Pods-xComic.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-xComic.release.xcconfig"; path = "Pods/Target Support Files/Pods-xComic/Pods-xComic.release.xcconfig"; sourceTree = "<group>"; };
 		CC34B80BA4F27187B6301487 /* Pods-xComic.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-xComic.debug.xcconfig"; path = "Pods/Target Support Files/Pods-xComic/Pods-xComic.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -118,12 +124,15 @@
 			isa = PBXGroup;
 			children = (
 				4B40C4E21CCD907B0082027B /* AppDelegate.swift */,
-				4B40C4E41CCD907B0082027B /* ViewController.swift */,
-				4B40C4E61CCD907B0082027B /* Main.storyboard */,
 				4B40C4E91CCD907B0082027B /* Assets.xcassets */,
-				4B40C4EB1CCD907B0082027B /* LaunchScreen.storyboard */,
-				4B40C4EE1CCD907B0082027B /* Info.plist */,
 				4B40C5031CCD94A70082027B /* dummy.m */,
+				4B40C4EE1CCD907B0082027B /* Info.plist */,
+				4B40C4EB1CCD907B0082027B /* LaunchScreen.storyboard */,
+				4B40C4E61CCD907B0082027B /* Main.storyboard */,
+				4B40C5171CCD96270082027B /* SMBFileHandle.swift */,
+				4B40C5181CCD96270082027B /* SMBFileManager.swift */,
+				4B40C5191CCD96270082027B /* SMBService.swift */,
+				4B40C4E41CCD907B0082027B /* ViewController.swift */,
 				4B40C5021CCD94A70082027B /* xComic-Bridging-Header.h */,
 			);
 			path = xComic;
@@ -321,7 +330,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B40C51C1CCD96270082027B /* SMBService.swift in Sources */,
+				4B40C51A1CCD96270082027B /* SMBFileHandle.swift in Sources */,
 				4B40C5041CCD94A70082027B /* dummy.m in Sources */,
+				4B40C51B1CCD96270082027B /* SMBFileManager.swift in Sources */,
 				4B40C4E51CCD907B0082027B /* ViewController.swift in Sources */,
 				4B40C4E31CCD907B0082027B /* AppDelegate.swift in Sources */,
 			);
