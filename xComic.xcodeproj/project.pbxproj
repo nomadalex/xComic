@@ -15,6 +15,9 @@
 		4B40C4ED1CCD907B0082027B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B40C4EB1CCD907B0082027B /* LaunchScreen.storyboard */; };
 		4B40C4F81CCD907B0082027B /* xComicUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B40C4F71CCD907B0082027B /* xComicUITests.swift */; };
 		4B40C5041CCD94A70082027B /* dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B40C5031CCD94A70082027B /* dummy.m */; };
+		4B40C5131CCD95450082027B /* libdsm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B40C5111CCD95450082027B /* libdsm.a */; };
+		4B40C5141CCD95450082027B /* libtasn1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B40C5121CCD95450082027B /* libtasn1.a */; };
+		4B40C5161CCD955C0082027B /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B40C5151CCD955C0082027B /* libiconv.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,6 +44,20 @@
 		4B40C4F91CCD907B0082027B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4B40C5021CCD94A70082027B /* xComic-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "xComic-Bridging-Header.h"; sourceTree = "<group>"; };
 		4B40C5031CCD94A70082027B /* dummy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = dummy.m; sourceTree = "<group>"; };
+		4B40C5061CCD952C0082027B /* bdsm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = bdsm.h; path = libdsm/bdsm/bdsm.h; sourceTree = "<group>"; };
+		4B40C5071CCD952C0082027B /* libtasn1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = libtasn1.h; path = libdsm/bdsm/libtasn1.h; sourceTree = "<group>"; };
+		4B40C5081CCD952C0082027B /* netbios_defs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = netbios_defs.h; path = libdsm/bdsm/netbios_defs.h; sourceTree = "<group>"; };
+		4B40C5091CCD952C0082027B /* netbios_ns.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = netbios_ns.h; path = libdsm/bdsm/netbios_ns.h; sourceTree = "<group>"; };
+		4B40C50A1CCD952C0082027B /* smb_defs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = smb_defs.h; path = libdsm/bdsm/smb_defs.h; sourceTree = "<group>"; };
+		4B40C50B1CCD952C0082027B /* smb_dir.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = smb_dir.h; path = libdsm/bdsm/smb_dir.h; sourceTree = "<group>"; };
+		4B40C50C1CCD952C0082027B /* smb_file.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = smb_file.h; path = libdsm/bdsm/smb_file.h; sourceTree = "<group>"; };
+		4B40C50D1CCD952C0082027B /* smb_session.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = smb_session.h; path = libdsm/bdsm/smb_session.h; sourceTree = "<group>"; };
+		4B40C50E1CCD952C0082027B /* smb_share.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = smb_share.h; path = libdsm/bdsm/smb_share.h; sourceTree = "<group>"; };
+		4B40C50F1CCD952C0082027B /* smb_stat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = smb_stat.h; path = libdsm/bdsm/smb_stat.h; sourceTree = "<group>"; };
+		4B40C5101CCD952C0082027B /* smb_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = smb_types.h; path = libdsm/bdsm/smb_types.h; sourceTree = "<group>"; };
+		4B40C5111CCD95450082027B /* libdsm.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libdsm.a; path = libdsm/libdsm.a; sourceTree = "<group>"; };
+		4B40C5121CCD95450082027B /* libtasn1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtasn1.a; path = libdsm/libtasn1.a; sourceTree = "<group>"; };
+		4B40C5151CCD955C0082027B /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		6ACC86C60199AD74838038D1 /* Pods-xComic.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-xComic.release.xcconfig"; path = "Pods/Target Support Files/Pods-xComic/Pods-xComic.release.xcconfig"; sourceTree = "<group>"; };
 		CC34B80BA4F27187B6301487 /* Pods-xComic.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-xComic.debug.xcconfig"; path = "Pods/Target Support Files/Pods-xComic/Pods-xComic.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -50,6 +67,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B40C5161CCD955C0082027B /* libiconv.tbd in Frameworks */,
+				4B40C5131CCD95450082027B /* libdsm.a in Frameworks */,
+				4B40C5141CCD95450082027B /* libtasn1.a in Frameworks */,
 				080D2892C9F398165B271839 /* Pods_xComic.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -76,6 +96,7 @@
 		4B40C4D61CCD907B0082027B = {
 			isa = PBXGroup;
 			children = (
+				4B40C5051CCD95170082027B /* libdsm */,
 				4B40C4E11CCD907B0082027B /* xComic */,
 				4B40C4F61CCD907B0082027B /* xComicUITests */,
 				4B40C4E01CCD907B0082027B /* Products */,
@@ -117,9 +138,30 @@
 			path = xComicUITests;
 			sourceTree = "<group>";
 		};
+		4B40C5051CCD95170082027B /* libdsm */ = {
+			isa = PBXGroup;
+			children = (
+				4B40C5061CCD952C0082027B /* bdsm.h */,
+				4B40C5071CCD952C0082027B /* libtasn1.h */,
+				4B40C5081CCD952C0082027B /* netbios_defs.h */,
+				4B40C5091CCD952C0082027B /* netbios_ns.h */,
+				4B40C50A1CCD952C0082027B /* smb_defs.h */,
+				4B40C50B1CCD952C0082027B /* smb_dir.h */,
+				4B40C50C1CCD952C0082027B /* smb_file.h */,
+				4B40C50D1CCD952C0082027B /* smb_session.h */,
+				4B40C50E1CCD952C0082027B /* smb_share.h */,
+				4B40C50F1CCD952C0082027B /* smb_stat.h */,
+				4B40C5101CCD952C0082027B /* smb_types.h */,
+			);
+			name = libdsm;
+			sourceTree = "<group>";
+		};
 		C6A6CFD1F680853B7DF9C596 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4B40C5151CCD955C0082027B /* libiconv.tbd */,
+				4B40C5111CCD95450082027B /* libdsm.a */,
+				4B40C5121CCD95450082027B /* libtasn1.a */,
 				4777512604AEC9EBB185C641 /* Pods_xComic.framework */,
 			);
 			name = Frameworks;
@@ -414,8 +456,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/libdsm";
 				INFOPLIST_FILE = xComic/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/libdsm",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ifreedomlife.xComic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "xComic/xComic-Bridging-Header.h";
@@ -429,8 +476,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/libdsm";
 				INFOPLIST_FILE = xComic/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/libdsm",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ifreedomlife.xComic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "xComic/xComic-Bridging-Header.h";
