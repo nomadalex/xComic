@@ -47,6 +47,18 @@ public class SMBService: NSObject {
         netbios_ns_destroy(nameService)
     }
 
+    public func resolveIPWithName(name: String) -> UInt32? {
+        var ip: UInt32 = 0
+        guard netbios_ns_resolve(nameService, name, Int8(NETBIOS_FILESERVER), &ip) == 0 else { return nil }
+        return ip
+    }
+
+    public func lookupNameByIP(ip: UInt32) -> String? {
+        let name = netbios_ns_inverse(nameService, ip)
+        guard name != nil else { return nil }
+        return String.fromCString(name)
+    }
+
     public func startDiscoveryWithTimeout(timeout: NSTimeInterval = 0, added: (NetBIOSEntry) -> Void, removed: (NetBIOSEntry) -> Void) -> Bool {
         if self.discovering {
             self.stopDiscovery()
