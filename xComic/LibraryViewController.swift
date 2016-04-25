@@ -34,8 +34,8 @@ class LibraryViewController: UITableViewController {
         // Do any additional setup after loading the view, typically from a nib.
         self.navigationItem.leftBarButtonItem = self.editButtonItem()
 
-        let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(addComic(_:)))
-        self.navigationItem.rightBarButtonItem = addButton
+        let optionButton = UIBarButtonItem(title: "Option", style: .Plain, target: self, action: #selector(showOptionMenu))
+        self.navigationItem.rightBarButtonItem = optionButton
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -45,6 +45,17 @@ class LibraryViewController: UITableViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+
+    func showOptionMenu(sender: AnyObject) {
+        let menu = UIAlertController(title: nil, message: "Choose Option", preferredStyle: .ActionSheet)
+
+        menu.addAction(UIAlertAction(title: "Add", style: .Default, handler: addComic))
+        menu.addAction(UIAlertAction(title: "Settings", style: .Default, handler: nil))
+        menu.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+
+        menu.popoverPresentationController!.barButtonItem = sender as? UIBarButtonItem
+        self.presentViewController(menu, animated: true, completion: nil)
     }
 
     func addComic(sender: AnyObject) {
