@@ -17,7 +17,7 @@ private func ipToStr(ip: UInt32) -> String {
     return "\(byte1).\(byte2).\(byte3).\(byte4)"
 }
 
-public struct NetBIOSEntry {
+public struct SMBServerEntry {
     public var name = ""
     public var ip: UInt32 = 0
 
@@ -34,8 +34,8 @@ public class SMBService: NSObject {
     private let defaultDiscoveryTimeout: NSTimeInterval = 4.0
 
     private var _discovering = false
-    private var onNetBIOSEntryAdded: ((NetBIOSEntry) -> Void)? = nil
-    private var onNetBIOSEntryRemoved: ((NetBIOSEntry) -> Void)? = nil
+    private var onNetBIOSEntryAdded: ((SMBServerEntry) -> Void)? = nil
+    private var onNetBIOSEntryRemoved: ((SMBServerEntry) -> Void)? = nil
 
     public var discovering: Bool {
         get { return _discovering }
@@ -59,7 +59,7 @@ public class SMBService: NSObject {
         return String.fromCString(name)
     }
 
-    public func startDiscoveryWithTimeout(timeout: NSTimeInterval = 0, added: (NetBIOSEntry) -> Void, removed: (NetBIOSEntry) -> Void) -> Bool {
+    public func startDiscoveryWithTimeout(timeout: NSTimeInterval = 0, added: (SMBServerEntry) -> Void, removed: (SMBServerEntry) -> Void) -> Bool {
         if self.discovering {
             self.stopDiscovery()
         }
@@ -71,7 +71,7 @@ public class SMBService: NSObject {
             let name = String.fromCString(netbios_ns_entry_name(centry))
             let ip = netbios_ns_entry_ip(centry)
             dispatch_async(dispatch_get_main_queue()) {
-                ser.onNetBIOSEntryAdded!(NetBIOSEntry(name: name!, ip: ip))
+                ser.onNetBIOSEntryAdded!(SMBServerEntry(name: name!, ip: ip))
             }
         }
         callbacks.pf_on_entry_removed = { (ptr: UnsafeMutablePointer<Void>, centry: COpaquePointer) in
@@ -79,7 +79,7 @@ public class SMBService: NSObject {
             let name = String.fromCString(netbios_ns_entry_name(centry))
             let ip = netbios_ns_entry_ip(centry)
             dispatch_async(dispatch_get_main_queue()) {
-                ser.onNetBIOSEntryRemoved!(NetBIOSEntry(name: name!, ip: ip))
+                ser.onNetBIOSEntryRemoved!(SMBServerEntry(name: name!, ip: ip))
             }
         }
 
