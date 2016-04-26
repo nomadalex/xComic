@@ -10,4 +10,5 @@ import Foundation
 import UIKit
 
 class ReaderViewController: UITableViewController {
+    var comic: Comic!
 }

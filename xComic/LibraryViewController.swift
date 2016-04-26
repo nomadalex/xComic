@@ -21,6 +21,7 @@ class LibraryCell: UITableViewCell {
 
 struct Comic {
     let title: String
+    let dirPath: String
     let images: [String]
     var cur: Int
 }
@@ -62,20 +63,21 @@ class LibraryViewController: UITableViewController {
 
     private func getImagesInDir(path: String) -> [String] {
         let imgs = fm.contentsOfDirectoryAtPath(path).filter { fn in
-                let ext = (fn as NSString).pathExtension
-                switch ext.lowercaseString {
-                case "jpg", "jpeg", "png": return true
-                default: return false
-                }
+            guard fn[fn.startIndex] != "." else { return false }
+            let ext = (fn as NSString).pathExtension
+            switch ext.lowercaseString {
+            case "jpg", "jpeg", "png": return true
+            default: return false
             }
+        }
         return imgs
     }
 
     private func addComicAtPath(path: String) {
-        let imgs = getImagesInDir(path).map { fn in path + "/" + fn }
+        let imgs = getImagesInDir(path).sort({ $0 < $1 })
         guard !imgs.isEmpty else { return }
         let dirName = (path as NSString).lastPathComponent
-        self.comics.append(Comic(title: dirName, images: imgs, cur: 0))
+        self.comics.append(Comic(title: dirName, dirPath: path, images: imgs, cur: 0))
     }
 
     // MARK: - Segues
@@ -123,7 +125,8 @@ class LibraryViewController: UITableViewController {
 
         weak var weakCell = cell
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
-            guard let f = self.fm.openFile(forReadingAtPath: comic.images[0]) else { return }
+            let firstImg = comic.dirPath + "/" + comic.images[0]
+            guard let f = self.fm.openFile(forReadingAtPath: firstImg) else { return }
             let data = f.readDataToEndOfFile()
             f.closeFile()
 
