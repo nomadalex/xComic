@@ -85,16 +85,12 @@ class LibraryViewController: UITableViewController {
     // MARK: - Segues
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        /*
-        if segue.identifier == "showDetail" {
+        if segue.identifier == "showComic" {
             if let indexPath = self.tableView.indexPathForSelectedRow {
-                let controller = (segue.destinationViewController as! UINavigationController).topViewController as! DetailViewController
-                controller.detailItem = objects[indexPath.row]
-                controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
-                controller.navigationItem.leftItemsSupplementBackButton = true
+                let controller = segue.destinationViewController as! ReaderViewController
+                controller.comic = self.comics[indexPath.row]
             }
         }
-         */
         if segue.identifier == "showComicChooser" {
             let controller = segue.destinationViewController as! ChooserViewController
             controller.chooseCompletion = { paths in

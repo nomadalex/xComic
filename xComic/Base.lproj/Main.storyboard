@@ -79,7 +79,7 @@
                                     <outlet property="progressLabel" destination="LZR-6O-HWN" id="xW5-x5-faV"/>
                                     <outlet property="thumbnailImg" destination="vyt-Hx-LkH" id="6py-aC-gZQ"/>
                                     <outlet property="titleLabel" destination="GbC-IX-LsB" id="RvV-yR-wtJ"/>
-                                    <segue destination="TRu-QT-SI8" kind="show" id="Wh9-g8-Dpu"/>
+                                    <segue destination="TRu-QT-SI8" kind="show" identifier="showComic" id="Wh9-g8-Dpu"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
