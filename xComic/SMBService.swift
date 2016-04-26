@@ -140,7 +140,7 @@ public class SMBService: NSObject {
             smb_session_destroy(s)
             return false
         }
-        guard username == "" || smb_session_is_guest(s) == 0 else {
+        guard username == "" || smb_session_is_guest(s) != 1 else { // here has a bug in libdsm, it report -1 but logined
             smb_session_destroy(s)
             return false
         }
