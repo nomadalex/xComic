@@ -175,7 +175,7 @@ public class SMBFileManager: NSObject {
         }
     }
 
-    public func createDirectoryAtPath(path: String, withIntermediateDirectories createIntermediates: Bool = false) -> Bool {
+    public func createDirectoryAtPath(path: String) -> Bool {
         guard let (ipStr, share, ipath) = toNormalizedFullPath(path)?.parse() else { return false }
         guard let (s, tid) = getOrConnectShare(ipStr, share: share) else { return false }
         guard smb_directory_create(s, tid, toSMBPath(ipath)) == 0 else { return false }
