@@ -88,7 +88,7 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
 
     private func loginServer(idx: Int, username: String, password: String, completion: ((Bool) -> Void)?) {
         SVProgressHUD.showWithMaskType(.Gradient)
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), {
+        dispatch_async(smbWorkQueue, {
             let srv = self.servers[idx]
             let sm = SMBService.sharedInstance
 
@@ -142,7 +142,7 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
     private func navToNext(idx: Int) {
         func runInBackground(block: () -> (String, String, [String])?) {
             SVProgressHUD.showWithMaskType(.Gradient)
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), {
+            dispatch_async(smbWorkQueue, {
                 let ret = block()
                 dispatch_async(dispatch_get_main_queue(), {
                     if let (fn, title, fileList) = ret {
@@ -215,7 +215,7 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
         let path = "/" + pathStack.joinWithSeparator("/")
 
         SVProgressHUD.showWithMaskType(.Gradient)
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), {
+        dispatch_async(smbWorkQueue, {
             let fm = SMBFileManager.sharedInstance
             let fileList: [String]?
             if fm.changeCurrentDirectoryPath(path) {

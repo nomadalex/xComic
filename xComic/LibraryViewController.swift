@@ -10,6 +10,15 @@ import Foundation
 import UIKit
 import SVProgressHUD
 
+struct Comic {
+    let title: String
+    let dirPath: String
+    let images: [String]
+    var cur: Int
+}
+
+let smbWorkQueue = dispatch_queue_create("com.ifreedomlife.xComic", DISPATCH_QUEUE_SERIAL)
+
 class LibraryCell: UITableViewCell {
     @IBOutlet
     var thumbnailImg: UIImageView!
@@ -17,13 +26,6 @@ class LibraryCell: UITableViewCell {
     var titleLabel: UILabel!
     @IBOutlet
     var progressLabel: UILabel!
-}
-
-struct Comic {
-    let title: String
-    let dirPath: String
-    let images: [String]
-    var cur: Int
 }
 
 class LibraryViewController: UITableViewController {
@@ -98,7 +100,7 @@ class LibraryViewController: UITableViewController {
             controller.chooseCompletion = { paths in
                 SVProgressHUD.showWithMaskType(.Gradient)
                 let lastCount = self.comics.count
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), {
+                dispatch_async(smbWorkQueue, {
                     for path in paths {
                         self.addComicAtPath("/" + path.0 + "/" + path.1)
                     }
@@ -124,7 +126,7 @@ class LibraryViewController: UITableViewController {
         let comic = self.comics[indexPath.row]
 
         weak var weakCell = cell
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
+        dispatch_async(smbWorkQueue) {
             let firstImg = comic.dirPath + "/" + comic.images[0]
             guard let f = self.fm.openFile(forReadingAtPath: firstImg) else { return }
             let data = f.readDataToEndOfFile()
