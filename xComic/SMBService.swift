@@ -140,6 +140,10 @@ public class SMBService: NSObject {
             smb_session_destroy(s)
             return false
         }
+        guard username == "" || smb_session_is_guest(s) == 0 else {
+            smb_session_destroy(s)
+            return false
+        }
         connectedServers[name] = Server(name: name, ip: ip, session: s, user: username, pass: password)
         SMBFileManager.sharedInstance.addSession(name, ipStr: ipToStr(ip), session: s)
         return true
