@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import SVProgressHUD
 
 class LibraryCell: UITableViewCell {
     @IBOutlet
@@ -19,13 +20,14 @@ class LibraryCell: UITableViewCell {
 }
 
 struct Comic {
-    let thumbnail: String
     let title: String
+    let images: [String]
     var cur: Int
-    let total: Int
 }
 
 class LibraryViewController: UITableViewController {
+
+    private let fm = SMBFileManager.sharedInstance
 
     private var comics = [Comic]()
 
@@ -56,11 +58,24 @@ class LibraryViewController: UITableViewController {
 
     func showChooser(sender: AnyObject) {
         self.performSegueWithIdentifier("showComicChooser", sender: nil)
-        /*
-        self.comics.insert(Comic(thumbnail: "", title: NSDate().description, cur: 0, total: 10), atIndex: 0)
-        let indexPath = NSIndexPath(forRow: 0, inSection: 0)
-        self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
-        */
+    }
+
+    private func getImagesInDir(path: String) -> [String] {
+        let imgs = fm.contentsOfDirectoryAtPath(path).filter { fn in
+                let ext = (fn as NSString).pathExtension
+                switch ext.lowercaseString {
+                case "jpg", "jpeg", "png": return true
+                default: return false
+                }
+            }
+        return imgs
+    }
+
+    private func addComicAtPath(path: String) {
+        let imgs = getImagesInDir(path).map { fn in path + "/" + fn }
+        guard !imgs.isEmpty else { return }
+        let dirName = (path as NSString).lastPathComponent
+        self.comics.append(Comic(title: dirName, images: imgs, cur: 0))
     }
 
     // MARK: - Segues
@@ -79,9 +94,19 @@ class LibraryViewController: UITableViewController {
         if segue.identifier == "showComicChooser" {
             let controller = segue.destinationViewController as! ChooserViewController
             controller.chooseCompletion = { paths in
-                for path in paths {
-                    print(path)
-                }
+                SVProgressHUD.showWithMaskType(.Gradient)
+                let lastCount = self.comics.count
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), {
+                    for path in paths {
+                        self.addComicAtPath("/" + path.0 + "/" + path.1)
+                    }
+                    dispatch_async(dispatch_get_main_queue(), {
+                        SVProgressHUD.dismiss()
+                        guard lastCount < self.comics.count else { return }
+                        let indexs = (lastCount..<self.comics.count).map() { i in NSIndexPath(forRow: i, inSection: 0) }
+                        self.tableView.insertRowsAtIndexPaths(indexs, withRowAnimation: .Automatic)
+                    })
+                })
             }
         }
     }
@@ -96,8 +121,21 @@ class LibraryViewController: UITableViewController {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! LibraryCell
         let comic = self.comics[indexPath.row]
 
+        weak var weakCell = cell
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
+            guard let f = self.fm.openFile(forReadingAtPath: comic.images[0]) else { return }
+            let data = f.readDataToEndOfFile()
+            f.closeFile()
+
+            dispatch_async(dispatch_get_main_queue()) {
+                if let cell = weakCell {
+                    cell.thumbnailImg.image = UIImage(data: data)
+                }
+            }
+        }
+
         cell.titleLabel.text = comic.title
-        cell.progressLabel.text = "\(comic.cur) / \(comic.total)"
+        cell.progressLabel.text = "\(comic.cur) / \(comic.images.count)"
 
         return cell
     }
