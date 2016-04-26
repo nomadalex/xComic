@@ -22,6 +22,7 @@
 		4B40C51B1CCD96270082027B /* SMBFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B40C5181CCD96270082027B /* SMBFileManager.swift */; };
 		4B40C51C1CCD96270082027B /* SMBService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B40C5191CCD96270082027B /* SMBService.swift */; };
 		4B40C51E1CCDAC4A0082027B /* LibraryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B40C51D1CCDAC4A0082027B /* LibraryViewController.swift */; };
+		4B7AA9E81CCFCB4900362FB8 /* ReaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7AA9E71CCFCB4900362FB8 /* ReaderViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,6 +67,7 @@
 		4B40C5181CCD96270082027B /* SMBFileManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SMBFileManager.swift; sourceTree = "<group>"; };
 		4B40C5191CCD96270082027B /* SMBService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SMBService.swift; sourceTree = "<group>"; };
 		4B40C51D1CCDAC4A0082027B /* LibraryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryViewController.swift; sourceTree = "<group>"; };
+		4B7AA9E71CCFCB4900362FB8 /* ReaderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReaderViewController.swift; sourceTree = "<group>"; };
 		6ACC86C60199AD74838038D1 /* Pods-xComic.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-xComic.release.xcconfig"; path = "Pods/Target Support Files/Pods-xComic/Pods-xComic.release.xcconfig"; sourceTree = "<group>"; };
 		CC34B80BA4F27187B6301487 /* Pods-xComic.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-xComic.debug.xcconfig"; path = "Pods/Target Support Files/Pods-xComic/Pods-xComic.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -137,6 +139,7 @@
 				4B40C5181CCD96270082027B /* SMBFileManager.swift */,
 				4B40C5191CCD96270082027B /* SMBService.swift */,
 				4B40C5021CCD94A70082027B /* xComic-Bridging-Header.h */,
+				4B7AA9E71CCFCB4900362FB8 /* ReaderViewController.swift */,
 			);
 			path = xComic;
 			sourceTree = "<group>";
@@ -340,6 +343,7 @@
 				4B40C51B1CCD96270082027B /* SMBFileManager.swift in Sources */,
 				4B40C51E1CCDAC4A0082027B /* LibraryViewController.swift in Sources */,
 				4B40C4E31CCD907B0082027B /* AppDelegate.swift in Sources */,
+				4B7AA9E81CCFCB4900362FB8 /* ReaderViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

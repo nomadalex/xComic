@@ -41,7 +41,7 @@
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GbC-IX-LsB">
                                             <rect key="frame" x="101" y="8" width="499" height="24"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Progress" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LZR-6O-HWN">
@@ -50,12 +50,12 @@
                                                 <constraint firstAttribute="width" constant="117" id="bAd-t3-ZRM"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="vyt-Hx-LkH">
                                             <rect key="frame" x="21" y="5" width="60" height="80"/>
-                                            <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="80" id="OAB-Pd-guR"/>
                                                 <constraint firstAttribute="width" constant="60" id="t13-jc-6yj"/>
@@ -76,6 +76,7 @@
                                     <outlet property="progressLabel" destination="LZR-6O-HWN" id="xW5-x5-faV"/>
                                     <outlet property="thumbnailImg" destination="vyt-Hx-LkH" id="6py-aC-gZQ"/>
                                     <outlet property="titleLabel" destination="GbC-IX-LsB" id="RvV-yR-wtJ"/>
+                                    <segue destination="TRu-QT-SI8" kind="show" id="Wh9-g8-Dpu"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -151,7 +152,35 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NeC-0a-LkG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="373" y="-143"/>
+            <point key="canvasLocation" x="373" y="245"/>
+        </scene>
+        <!--Reader View Controller-->
+        <scene sceneID="x5a-mU-QlU">
+            <objects>
+                <tableViewController id="TRu-QT-SI8" customClass="ReaderViewController" customModule="xComic" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="wHq-Yq-djF">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" id="qfE-v2-aHn">
+                                <rect key="frame" x="0.0" y="92" width="600" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="qfE-v2-aHn" id="9VA-eM-xCQ">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="TRu-QT-SI8" id="CaR-Rq-Qgd"/>
+                            <outlet property="delegate" destination="TRu-QT-SI8" id="WPQ-ca-jK6"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WgP-my-xuI" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="373" y="880"/>
         </scene>
     </scenes>
 </document>
