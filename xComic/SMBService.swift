@@ -38,7 +38,7 @@ public class SMBService: NSObject {
 
     public static let sharedInstance = SMBService()
 
-    private let nameService: COpaquePointer = netbios_ns_new()
+    private var nameService: COpaquePointer = netbios_ns_new()
 
     private let defaultDiscoveryTimeout: NSTimeInterval = 4.0
 
@@ -117,6 +117,8 @@ public class SMBService: NSObject {
         self.onNetBIOSEntryAdded = nil
         self.onNetBIOSEntryRemoved = nil
         netbios_ns_discover_stop(self.nameService)
+        netbios_ns_destroy(self.nameService)
+        self.nameService = netbios_ns_new()
     }
 
     public func isConnected(name: String) -> Bool {
