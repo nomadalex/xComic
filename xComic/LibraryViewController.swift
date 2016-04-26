@@ -38,10 +38,6 @@ class LibraryViewController: UITableViewController {
         self.navigationItem.rightBarButtonItem = optionButton
     }
 
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-    }
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -50,7 +46,7 @@ class LibraryViewController: UITableViewController {
     func showOptionMenu(sender: AnyObject) {
         let menu = UIAlertController(title: nil, message: "Choose Option", preferredStyle: .ActionSheet)
 
-        menu.addAction(UIAlertAction(title: "Add", style: .Default, handler: addComic))
+        menu.addAction(UIAlertAction(title: "Add", style: .Default, handler: showChooser))
         menu.addAction(UIAlertAction(title: "Settings", style: .Default, handler: nil))
         menu.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
 
@@ -58,10 +54,13 @@ class LibraryViewController: UITableViewController {
         self.presentViewController(menu, animated: true, completion: nil)
     }
 
-    func addComic(sender: AnyObject) {
+    func showChooser(sender: AnyObject) {
+        self.performSegueWithIdentifier("showComicChooser", sender: nil)
+        /*
         self.comics.insert(Comic(thumbnail: "", title: NSDate().description, cur: 0, total: 10), atIndex: 0)
         let indexPath = NSIndexPath(forRow: 0, inSection: 0)
         self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+        */
     }
 
     // MARK: - Segues
@@ -77,6 +76,14 @@ class LibraryViewController: UITableViewController {
             }
         }
          */
+        if segue.identifier == "showComicChooser" {
+            let controller = segue.destinationViewController as! ChooserViewController
+            controller.chooseCompletion = { paths in
+                for path in paths {
+                    print(path)
+                }
+            }
+        }
     }
 
     // MARK: - Table View

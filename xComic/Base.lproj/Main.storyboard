@@ -85,10 +85,73 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="PEl-Sl-Jj2"/>
+                    <connections>
+                        <segue destination="mal-yT-hdr" kind="presentation" identifier="showComicChooser" modalPresentationStyle="formSheet" id="HT9-Y4-2QN"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KSh-F5-bUO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-369" y="550"/>
+            <point key="canvasLocation" x="-339" y="550"/>
+        </scene>
+        <!--Chooser View Controller-->
+        <scene sceneID="JUn-Yw-jW6">
+            <objects>
+                <viewController id="mal-yT-hdr" customClass="ChooserViewController" customModule="xComic" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="beh-8i-JZj"/>
+                        <viewControllerLayoutGuide type="bottom" id="bdm-UA-okK"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="PLE-sx-730">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="WYL-V2-hsy">
+                                <rect key="frame" x="0.0" y="44" width="600" height="556"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" id="NbD-uT-wFY">
+                                        <rect key="frame" x="0.0" y="28" width="600" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="NbD-uT-wFY" id="NmW-42-ZET">
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="mal-yT-hdr" id="AeX-ae-l88"/>
+                                    <outlet property="delegate" destination="mal-yT-hdr" id="Q6l-Fz-VXp"/>
+                                </connections>
+                            </tableView>
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QU1-cT-igu">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                                <items>
+                                    <navigationItem title="Title" id="kon-MA-hma"/>
+                                </items>
+                                <connections>
+                                    <outlet property="delegate" destination="mal-yT-hdr" id="a2b-T7-3hE"/>
+                                </connections>
+                            </navigationBar>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="WYL-V2-hsy" firstAttribute="leading" secondItem="QU1-cT-igu" secondAttribute="leading" id="1ho-eJ-nXf"/>
+                            <constraint firstAttribute="trailing" secondItem="WYL-V2-hsy" secondAttribute="trailing" id="CbQ-gG-B8F"/>
+                            <constraint firstItem="QU1-cT-igu" firstAttribute="top" secondItem="beh-8i-JZj" secondAttribute="bottom" id="EE3-ZG-D9M"/>
+                            <constraint firstItem="WYL-V2-hsy" firstAttribute="leading" secondItem="PLE-sx-730" secondAttribute="leading" id="P5Y-7t-PzK"/>
+                            <constraint firstItem="WYL-V2-hsy" firstAttribute="top" secondItem="beh-8i-JZj" secondAttribute="bottom" constant="44" id="anr-wc-VVO"/>
+                            <constraint firstItem="WYL-V2-hsy" firstAttribute="trailing" secondItem="QU1-cT-igu" secondAttribute="trailing" id="lfc-Eg-Z8M"/>
+                            <constraint firstItem="bdm-UA-okK" firstAttribute="top" secondItem="WYL-V2-hsy" secondAttribute="bottom" id="qcP-eX-TOi"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="navBar" destination="QU1-cT-igu" id="uXA-JG-Hdl"/>
+                        <outlet property="tableView" destination="WYL-V2-hsy" id="3sm-KH-zls"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="NeC-0a-LkG" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="373" y="-143"/>
         </scene>
     </scenes>
 </document>

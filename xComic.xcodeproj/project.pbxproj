@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		080D2892C9F398165B271839 /* Pods_xComic.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4777512604AEC9EBB185C641 /* Pods_xComic.framework */; };
+		4B40002F1CCE4FE0006A174A /* ChooserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B40002E1CCE4FE0006A174A /* ChooserViewController.swift */; };
 		4B40C4E31CCD907B0082027B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B40C4E21CCD907B0082027B /* AppDelegate.swift */; };
 		4B40C4E81CCD907B0082027B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B40C4E61CCD907B0082027B /* Main.storyboard */; };
 		4B40C4EA1CCD907B0082027B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B40C4E91CCD907B0082027B /* Assets.xcassets */; };
@@ -35,6 +36,7 @@
 
 /* Begin PBXFileReference section */
 		4777512604AEC9EBB185C641 /* Pods_xComic.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_xComic.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B40002E1CCE4FE0006A174A /* ChooserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChooserViewController.swift; sourceTree = "<group>"; };
 		4B40C4DF1CCD907B0082027B /* xComic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = xComic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B40C4E21CCD907B0082027B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4B40C4E71CCD907B0082027B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -125,6 +127,7 @@
 			children = (
 				4B40C4E21CCD907B0082027B /* AppDelegate.swift */,
 				4B40C4E91CCD907B0082027B /* Assets.xcassets */,
+				4B40002E1CCE4FE0006A174A /* ChooserViewController.swift */,
 				4B40C5031CCD94A70082027B /* dummy.m */,
 				4B40C4EE1CCD907B0082027B /* Info.plist */,
 				4B40C4EB1CCD907B0082027B /* LaunchScreen.storyboard */,
@@ -331,6 +334,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B40C51C1CCD96270082027B /* SMBService.swift in Sources */,
+				4B40002F1CCE4FE0006A174A /* ChooserViewController.swift in Sources */,
 				4B40C51A1CCD96270082027B /* SMBFileHandle.swift in Sources */,
 				4B40C5041CCD94A70082027B /* dummy.m in Sources */,
 				4B40C51B1CCD96270082027B /* SMBFileManager.swift in Sources */,
