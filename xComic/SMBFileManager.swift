@@ -56,7 +56,7 @@ public class SMBFileManager: NSObject {
             guard parts.count > 1 else { return nil }
             let ipStr = parts[1]
             let share = parts.count > 2 ? parts[2] : ""
-            guard !checkShare || share == "" else { return nil }
+            guard !checkShare || share != "" else { return nil }
             let interPath = parts.count > 3 ? "/" + parts[3..<parts.count].joinWithSeparator("/") : "/"
             return (ipStr, share, interPath)
         }
