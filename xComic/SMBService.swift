@@ -27,6 +27,15 @@ public struct SMBServerEntry {
 }
 
 public class SMBService: NSObject {
+
+    private struct Server {
+        let name: String
+        let ip: UInt32
+        let session: COpaquePointer
+        let user: String?
+        let pass: String?
+    }
+
     public static let sharedInstance = SMBService()
 
     private let nameService: COpaquePointer = netbios_ns_new()
@@ -36,6 +45,8 @@ public class SMBService: NSObject {
     private var _discovering = false
     private var onNetBIOSEntryAdded: ((SMBServerEntry) -> Void)? = nil
     private var onNetBIOSEntryRemoved: ((SMBServerEntry) -> Void)? = nil
+
+    private var connectedServers = [String: Server]()
 
     public var discovering: Bool {
         get { return _discovering }
@@ -108,26 +119,35 @@ public class SMBService: NSObject {
         netbios_ns_discover_stop(self.nameService)
     }
 
-    public func connect(host: String, ip: UInt32, username: String?, password: String?) -> Bool {
+    public func isConnected(name: String) -> Bool {
+        return connectedServers[name] != nil
+    }
+
+    public func connect(name: String, ip: UInt32, username: String = "", password: String = "") -> Bool {
+        if connectedServers[name] != nil {
+            return false
+        }
+
         let s = smb_session_new()
-        guard smb_session_connect(s, host, ip, Int32(SMB_TRANSPORT_TCP)) == 0 else {
+        guard smb_session_connect(s, name, ip, Int32(SMB_TRANSPORT_TCP)) == 0 else {
             smb_session_destroy(s)
             return false
         }
-        smb_session_set_creds(s, host, " ", " ")
+        smb_session_set_creds(s, name, username == "" ? " " : username, password == "" ? " " : password)
         guard smb_session_login(s) == 0 else {
             smb_session_destroy(s)
             return false
         }
-        SMBFileManager.sharedInstance.addSession(ipToStr(ip), session: s)
+        connectedServers[name] = Server(name: name, ip: ip, session: s, user: username, pass: password)
+        SMBFileManager.sharedInstance.addSession(name, ipStr: ipToStr(ip), session: s)
         return true
     }
 
-    public func disconnect(ip: UInt32) {
-        let ipStr = ipToStr(ip)
-        let s = SMBFileManager.sharedInstance.getSession(ipStr)
-        guard s != nil else { return }
-        SMBFileManager.sharedInstance.removeSession(ipStr)
-        smb_session_destroy(s)
+    public func disconnect(name: String) {
+        if let srv = connectedServers[name] {
+            SMBFileManager.sharedInstance.removeSession(srv.name, ipStr: ipToStr(srv.ip))
+            smb_session_destroy(srv.session)
+            connectedServers.removeValueForKey(name)
+        }
     }
 }

@@ -78,19 +78,15 @@ public class SMBFileManager: NSObject {
 
     private override init() {}
 
-    internal func addSession(ipStr: String, session: COpaquePointer) {
-        sessions[ipStr] = SessionData(session: session)
+    internal func addSession(name: String, ipStr: String, session: COpaquePointer) {
+        let s = SessionData(session: session)
+        sessions[name] = s
+        sessions[ipStr] = s
     }
 
-    internal func removeSession(ipStr: String) {
+    internal func removeSession(name: String, ipStr: String) {
+        sessions.removeValueForKey(name)
         sessions.removeValueForKey(ipStr)
-    }
-
-    internal func getSession(ipStr: String) -> COpaquePointer {
-        if let sessionData = sessions[ipStr] {
-            return sessionData.session
-        }
-        return nil
     }
 
     private func connectShare(sessionData: SessionData, share: String) -> smb_tid? {
