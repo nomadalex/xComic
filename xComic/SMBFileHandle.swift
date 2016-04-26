@@ -33,7 +33,7 @@ public class SMBFileHandle: NSObject {
         }
     }
 
-    public func readDataToEndOfFile() throws -> NSData {
+    public func readDataToEndOfFile() -> NSData {
         let offset = offsetInFile
         let length = lengthOfFile
         let (delta, _) = UInt64.subtractWithOverflow(length, offset)
