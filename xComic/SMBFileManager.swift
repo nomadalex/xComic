@@ -12,6 +12,56 @@ public class SMBFileManager: NSObject {
     private let SMB_MOD_RO = SMB_MOD_READ | SMB_MOD_READ_EXT | SMB_MOD_READ_ATTR | SMB_MOD_READ_CTL
     private let SMB_MOD_RW = SMB_MOD_READ | SMB_MOD_WRITE | SMB_MOD_APPEND | SMB_MOD_READ_EXT | SMB_MOD_WRITE_EXT | SMB_MOD_READ_ATTR | SMB_MOD_WRITE_ATTR | SMB_MOD_READ_CTL
 
+    private struct Path {
+        private var string: String
+
+        init(_ str: String) {
+            self.string = str
+        }
+
+        func toString() -> String {
+            return string
+        }
+
+        var isRoot: Bool {
+            get { return string == "/" }
+        }
+
+        func combine(path: String) -> Path {
+            guard path != "" else { return self }
+            if path[path.startIndex] == "/" {
+                return Path(path)
+            } else {
+                return Path(string + "/" + path)
+            }
+        }
+
+        func normalize() -> Path? {
+            var parts = [String]()
+            for s in string.componentsSeparatedByString("/") {
+                switch s {
+                case "", ".": break
+                case "..":
+                     guard !parts.isEmpty else { return nil }
+                     parts.removeLast()
+                default:
+                    parts.append(s)
+                }
+            }
+            return Path("/" + parts.joinWithSeparator("/"))
+        }
+
+        func parse(checkShare: Bool = true) -> (String, String, String)? {
+            let parts = string.componentsSeparatedByString("/")
+            guard parts.count > 1 else { return nil }
+            let ipStr = parts[1]
+            let share = parts.count > 2 ? parts[2] : ""
+            guard !checkShare || share == "" else { return nil }
+            let interPath = parts.count > 3 ? "/" + parts[3..<parts.count].joinWithSeparator("/") : "/"
+            return (ipStr, share, interPath)
+        }
+    }
+
     private class SessionData {
         let session: COpaquePointer
         var shares = [String: smb_tid]()
@@ -23,7 +73,7 @@ public class SMBFileManager: NSObject {
 
     public static let sharedInstance = SMBFileManager()
 
-    private var _currentDirectoryPath = "/"
+    private var _currentDirectoryPath = Path("/")
     private var sessions = [String: SessionData]()
 
     private override init() {}
@@ -59,39 +109,8 @@ public class SMBFileManager: NSObject {
         }
     }
 
-    private func toAbsoultePath(path: String) -> String {
-        var p: String
-        if path != "/" && path[path.endIndex.predecessor()] == "/" {
-            p = path.substringToIndex(path.endIndex.predecessor())
-        } else {
-            p = path
-        }
-        if p[p.startIndex] == "/" {
-            return p;
-        }
-        if path == "" {
-            return _currentDirectoryPath
-        }
-        return _currentDirectoryPath + "/" + p
-    }
-
-    private func parsePath(path: String, checkShare: Bool = true) -> (String, String, String)? {
-        var parts = path.componentsSeparatedByString("/")
-        if parts.last == "" {
-            parts.removeLast()
-        }
-
-        let ipStr = parts.count > 1 ? parts[1] : ""
-        let share = parts.count > 2 ? parts[2] : ""
-
-        if ipStr == "" || (checkShare && share == "") {
-            return nil
-        }
-
-        let interPath = parts.count > 3 ?
-                        "/" + parts[3..<parts.count].joinWithSeparator("/") :
-                        "/"
-        return (ipStr, share, interPath)
+    private func toNormalizedFullPath(path: String) -> Path? {
+        return _currentDirectoryPath.combine(path).normalize()
     }
 
     private func toSMBPath(path: String) -> String {
@@ -113,30 +132,31 @@ public class SMBFileManager: NSObject {
 
     public var currentDirectoryPath: String {
         get {
-            return _currentDirectoryPath
+            return _currentDirectoryPath.toString()
         }
     }
 
     public func changeCurrentDirectoryPath(path: String) -> Bool {
-        let apath = toAbsoultePath(path)
-        if apath == "/" {
+        guard let apath = toNormalizedFullPath(path) else { return false }
+        if apath.isRoot {
             _currentDirectoryPath = apath
             return true
         }
-        guard let (ipStr, share, _) = parsePath(apath, checkShare: false) else { return false }
+        guard let (ipStr, share, _) = apath.parse(false) else { return false }
         if share == "" {
             guard self.sessions[ipStr] != nil else { return false }
             _currentDirectoryPath = apath
             return true
         } else {
-            guard directoryExistsAtPath(apath) else { return false }
+            guard directoryExistsAtPath(apath.toString()) else { return false }
             _currentDirectoryPath = apath
             return true
         }
     }
 
     public func contentsOfDirectoryAtPath(path: String) -> [String] {
-        guard let (ipStr, share, ipath) = parsePath(toAbsoultePath(path), checkShare: false) else { return [String]() }
+        guard let (ipStr, share, ipath) = toNormalizedFullPath(path)?.parse(false)
+              else { return [String]() }
         if share == "" {
             guard let s = self.sessions[ipStr]?.session else { return [String]() }
             var list: smb_share_list = nil
@@ -156,14 +176,14 @@ public class SMBFileManager: NSObject {
     }
 
     public func createDirectoryAtPath(path: String, withIntermediateDirectories createIntermediates: Bool = false) -> Bool {
-        guard let (ipStr, share, ipath) = parsePath(toAbsoultePath(path)) else { return false }
+        guard let (ipStr, share, ipath) = toNormalizedFullPath(path)?.parse() else { return false }
         guard let (s, tid) = getOrConnectShare(ipStr, share: share) else { return false }
         guard smb_directory_create(s, tid, toSMBPath(ipath)) == 0 else { return false }
         return true
     }
 
     public func removeItemAtPath(path: String) {
-        guard let (ipStr, share, ipath) = parsePath(toAbsoultePath(path)) else { return }
+        guard let (ipStr, share, ipath) = toNormalizedFullPath(path)?.parse() else { return }
         guard let (s, tid) = getOrConnectShare(ipStr, share: share) else { return }
         let smbPath = toSMBPath(ipath)
         let st = smb_fstat(s, tid, smbPath)
@@ -177,8 +197,8 @@ public class SMBFileManager: NSObject {
     }
 
     public func moveItemAtPath(path: String, toPath: String) -> Bool {
-        guard let (ipStr, share, ipath) = parsePath(toAbsoultePath(path)) else { return false }
-        guard let (toIpStr, toShare, toIPath) = parsePath(toAbsoultePath(toPath)) else { return false }
+        guard let (ipStr, share, ipath) = toNormalizedFullPath(path)?.parse() else { return false }
+        guard let (toIpStr, toShare, toIPath) = toNormalizedFullPath(toPath)?.parse() else { return false }
         guard ipStr == toIpStr && share == toShare && ipath != "/" && toIPath != "/" else { return false }
         guard let (s, tid) = getOrConnectShare(ipStr, share: share) else { return false }
         guard smb_file_mv(s, tid, toSMBPath(ipath), toSMBPath(toIPath)) == 0 else { return false }
@@ -186,7 +206,7 @@ public class SMBFileManager: NSObject {
     }
 
     public func fileExistsAtPath(path: String) -> Bool {
-        guard let (ipStr, share, ipath) = parsePath(toAbsoultePath(path)) else { return false }
+        guard let (ipStr, share, ipath) = toNormalizedFullPath(path)?.parse() else { return false }
         guard let (s, tid) = getOrConnectShare(ipStr, share: share) else { return false }
         if ipath == "/" {
             return true
@@ -198,7 +218,7 @@ public class SMBFileManager: NSObject {
     }
 
     public func directoryExistsAtPath(path: String) -> Bool {
-        guard let (ipStr, share, ipath) = parsePath(toAbsoultePath(path)) else { return false }
+        guard let (ipStr, share, ipath) = toNormalizedFullPath(path)?.parse() else { return false }
         guard let (s, tid) = getOrConnectShare(ipStr, share: share) else { return false }
         if ipath == "/" {
             return true
@@ -210,7 +230,7 @@ public class SMBFileManager: NSObject {
     }
 
     private func openFile(path: String, mod: UInt32) -> SMBFileHandle? {
-        guard let (ipStr, share, ipath) = parsePath(toAbsoultePath(path)) else { return nil }
+        guard let (ipStr, share, ipath) = toNormalizedFullPath(path)?.parse() else { return nil }
         guard let (s, tid) = getOrConnectShare(ipStr, share: share) else { return nil }
         var fd: smb_fd = 0
         guard smb_fopen(s, tid, ipath, mod, &fd) == 0 else { return nil }
