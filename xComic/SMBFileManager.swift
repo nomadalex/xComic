@@ -171,7 +171,7 @@ public class SMBFileManager: NSObject {
             guard list != nil else { return [String]() }
             defer { smb_stat_list_destroy(list) }
             let count = smb_stat_list_count(list)
-            return (0..<count).map { String.fromCString(smb_stat_name(smb_stat_list_at(list, $0)))! }
+            return (0..<count).map({ String.fromCString(smb_stat_name(smb_stat_list_at(list, $0)))! }).filter({ $0 != "." && $0 != ".." })
         }
     }
 
