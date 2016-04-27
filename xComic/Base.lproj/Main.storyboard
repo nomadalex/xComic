@@ -161,27 +161,48 @@
         <scene sceneID="x5a-mU-QlU">
             <objects>
                 <tableViewController id="TRu-QT-SI8" customClass="ReaderViewController" customModule="xComic" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="wHq-Yq-djF">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="wHq-Yq-djF">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" id="qfE-v2-aHn">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" id="qfE-v2-aHn" customClass="ReaderCell" customModule="xComic" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="92" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="qfE-v2-aHn" id="9VA-eM-xCQ">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Hy5-DD-82k">
+                                            <rect key="frame" x="0.0" y="-1" width="600" height="45"/>
+                                            <gestureRecognizers/>
+                                        </imageView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="Hy5-DD-82k" firstAttribute="height" secondItem="9VA-eM-xCQ" secondAttribute="height" id="EWF-2f-gNK"/>
+                                        <constraint firstItem="Hy5-DD-82k" firstAttribute="width" secondItem="9VA-eM-xCQ" secondAttribute="width" id="KZq-Ar-IwH"/>
+                                        <constraint firstItem="Hy5-DD-82k" firstAttribute="centerX" secondItem="9VA-eM-xCQ" secondAttribute="centerX" id="Lb9-Iz-MBj"/>
+                                        <constraint firstItem="Hy5-DD-82k" firstAttribute="centerY" secondItem="9VA-eM-xCQ" secondAttribute="centerY" id="cYk-5d-DmX"/>
+                                    </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="contentImage" destination="Hy5-DD-82k" id="742-zC-Gam"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
                             <outlet property="dataSource" destination="TRu-QT-SI8" id="CaR-Rq-Qgd"/>
                             <outlet property="delegate" destination="TRu-QT-SI8" id="WPQ-ca-jK6"/>
+                            <outletCollection property="gestureRecognizers" destination="7DV-Pd-YII" appends="YES" id="DEe-vk-qHN"/>
                         </connections>
                     </tableView>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WgP-my-xuI" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="7DV-Pd-YII">
+                    <connections>
+                        <action selector="toggleTopDisplay:" destination="TRu-QT-SI8" id="DdM-NA-QmH"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="373" y="880"/>
         </scene>
