@@ -1,9 +1,11 @@
 PODS:
   - Minizip (1.2.0)
+  - PINCache (2.2.2)
   - SVProgressHUD (1.1.3)
 
 DEPENDENCIES:
   - Minizip (from `Minizip.podspec`)
+  - PINCache (~> 2.2.2)
   - SVProgressHUD (~> 1.1.0)
 
 EXTERNAL SOURCES:
@@ -12,6 +14,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Minizip: da66cc04bfbe4636983148656d2a1fe12a4d3476
+  PINCache: 078426d356ab95ef875e9e62e5c35a2ea3333c28
   SVProgressHUD: 748080e4f36e603f6c02aec292664239df5279c1
 
 COCOAPODS: 0.39.0
