@@ -176,17 +176,21 @@
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Hy5-DD-82k">
                                             <rect key="frame" x="0.0" y="-1" width="600" height="45"/>
                                             <gestureRecognizers/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="45" id="5Nx-ZB-Jev"/>
+                                                <constraint firstAttribute="width" constant="600" id="Ghg-cr-8lb"/>
+                                            </constraints>
                                         </imageView>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="Hy5-DD-82k" firstAttribute="height" secondItem="9VA-eM-xCQ" secondAttribute="height" id="EWF-2f-gNK"/>
-                                        <constraint firstItem="Hy5-DD-82k" firstAttribute="width" secondItem="9VA-eM-xCQ" secondAttribute="width" id="KZq-Ar-IwH"/>
                                         <constraint firstItem="Hy5-DD-82k" firstAttribute="centerX" secondItem="9VA-eM-xCQ" secondAttribute="centerX" id="Lb9-Iz-MBj"/>
                                         <constraint firstItem="Hy5-DD-82k" firstAttribute="centerY" secondItem="9VA-eM-xCQ" secondAttribute="centerY" id="cYk-5d-DmX"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="contentImage" destination="Hy5-DD-82k" id="742-zC-Gam"/>
+                                    <outlet property="heightConstraint" destination="5Nx-ZB-Jev" id="NHQ-cz-zZr"/>
+                                    <outlet property="widthConstraint" destination="Ghg-cr-8lb" id="0xE-gW-Jlp"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>

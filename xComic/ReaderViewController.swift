@@ -11,6 +11,8 @@ import UIKit
 
 class ReaderCell: UITableViewCell {
     @IBOutlet var contentImage: UIImageView!
+    @IBOutlet var widthConstraint: NSLayoutConstraint!
+    @IBOutlet var heightConstraint: NSLayoutConstraint!
 }
 
 class ReaderViewController: UITableViewController {
@@ -64,6 +66,11 @@ class ReaderViewController: UITableViewController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! ReaderCell
 
+        let img = UIImage.gifWithName("placeholder")
+        cell.contentImage.image = img
+        cell.widthConstraint.constant = img!.size.width
+        cell.heightConstraint.constant = img!.size.height
+
         weak var weakCell = cell
         let idx = indexPath.row
         let path = getComicImageFullPath(idx)
@@ -74,7 +81,12 @@ class ReaderViewController: UITableViewController {
 
             dispatch_async(dispatch_get_main_queue()) {
                 if let cell = weakCell {
-                    cell.contentImage.image = UIImage(data: data)
+                    guard let img = UIImage(data: data) else { return }
+                    cell.contentImage.image = img
+                    let cellSize = cell.contentView.frame.size
+                    let ratio = min(cellSize.width / img.size.width, cellSize.height / img.size.height)
+                    cell.widthConstraint.constant = img.size.width * ratio
+                    cell.heightConstraint.constant = img.size.height * ratio
                 }
             }
         }

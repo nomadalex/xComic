@@ -27,6 +27,8 @@
 		4B7AA9F51CD079FD00362FB8 /* ComicRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7AA9F31CD079FD00362FB8 /* ComicRecord.swift */; };
 		4BC5BF451CD1FF8600C8985C /* ComicRecord+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC5BF441CD1FF8600C8985C /* ComicRecord+CoreDataProperties.swift */; };
 		4BC5BF471CD219FD00C8985C /* ServerEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC5BF461CD219FD00C8985C /* ServerEntry.swift */; };
+		4BC5BF7C1CD266C400C8985C /* UIImage+Gif.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC5BF7B1CD266C400C8985C /* UIImage+Gif.swift */; };
+		4BC5BF7E1CD2750400C8985C /* placeholder.gif in Resources */ = {isa = PBXBuildFile; fileRef = 4BC5BF7D1CD2750400C8985C /* placeholder.gif */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,6 +78,8 @@
 		4B7AA9F31CD079FD00362FB8 /* ComicRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComicRecord.swift; sourceTree = "<group>"; };
 		4BC5BF441CD1FF8600C8985C /* ComicRecord+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ComicRecord+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		4BC5BF461CD219FD00C8985C /* ServerEntry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerEntry.swift; sourceTree = "<group>"; };
+		4BC5BF7B1CD266C400C8985C /* UIImage+Gif.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Gif.swift"; sourceTree = "<group>"; };
+		4BC5BF7D1CD2750400C8985C /* placeholder.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = placeholder.gif; sourceTree = "<group>"; };
 		6ACC86C60199AD74838038D1 /* Pods-xComic.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-xComic.release.xcconfig"; path = "Pods/Target Support Files/Pods-xComic/Pods-xComic.release.xcconfig"; sourceTree = "<group>"; };
 		CC34B80BA4F27187B6301487 /* Pods-xComic.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-xComic.debug.xcconfig"; path = "Pods/Target Support Files/Pods-xComic/Pods-xComic.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -146,12 +150,14 @@
 				4B40C51D1CCDAC4A0082027B /* LibraryViewController.swift */,
 				4B40C4E61CCD907B0082027B /* Main.storyboard */,
 				4B7AA9E91CD0770800362FB8 /* Model.xcdatamodeld */,
+				4BC5BF7D1CD2750400C8985C /* placeholder.gif */,
 				4B7AA9E71CCFCB4900362FB8 /* ReaderViewController.swift */,
+				4BC5BF461CD219FD00C8985C /* ServerEntry.swift */,
 				4B40C5171CCD96270082027B /* SMBFileHandle.swift */,
 				4B40C5181CCD96270082027B /* SMBFileManager.swift */,
 				4B40C5191CCD96270082027B /* SMBService.swift */,
+				4BC5BF7B1CD266C400C8985C /* UIImage+Gif.swift */,
 				4B40C5021CCD94A70082027B /* xComic-Bridging-Header.h */,
-				4BC5BF461CD219FD00C8985C /* ServerEntry.swift */,
 			);
 			path = xComic;
 			sourceTree = "<group>";
@@ -282,6 +288,7 @@
 			files = (
 				4B40C4ED1CCD907B0082027B /* LaunchScreen.storyboard in Resources */,
 				4B40C4EA1CCD907B0082027B /* Assets.xcassets in Resources */,
+				4BC5BF7E1CD2750400C8985C /* placeholder.gif in Resources */,
 				4B40C4E81CCD907B0082027B /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -352,6 +359,7 @@
 				4BC5BF471CD219FD00C8985C /* ServerEntry.swift in Sources */,
 				4B40002F1CCE4FE0006A174A /* ChooserViewController.swift in Sources */,
 				4B40C51A1CCD96270082027B /* SMBFileHandle.swift in Sources */,
+				4BC5BF7C1CD266C400C8985C /* UIImage+Gif.swift in Sources */,
 				4B40C5041CCD94A70082027B /* dummy.m in Sources */,
 				4B40C51B1CCD96270082027B /* SMBFileManager.swift in Sources */,
 				4B7AA9EB1CD0770800362FB8 /* Model.xcdatamodeld in Sources */,
