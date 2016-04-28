@@ -24,7 +24,7 @@ class ReaderViewController: UITableViewController {
         // Do any additional setup after loading the view, typically from a nib.
 
         navigationController!.navigationBarHidden = !isShowTop
-        title = (comic.path! as NSString).lastPathComponent
+        title = comic.title!
     }
 
     override func prefersStatusBarHidden() -> Bool {
