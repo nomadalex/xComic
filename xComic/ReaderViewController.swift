@@ -14,7 +14,7 @@ class ReaderCell: UITableViewCell {
 }
 
 class ReaderViewController: UITableViewController {
-    var comic: Comic!
+    var comic: ComicRecord!
 
     private var isShowTop = false
     private let fm = SMBFileManager.sharedInstance
@@ -24,7 +24,7 @@ class ReaderViewController: UITableViewController {
         // Do any additional setup after loading the view, typically from a nib.
 
         navigationController!.navigationBarHidden = !isShowTop
-        title = (comic.dirPath as NSString).lastPathComponent
+        title = (comic.path! as NSString).lastPathComponent
     }
 
     override func prefersStatusBarHidden() -> Bool {
@@ -47,7 +47,7 @@ class ReaderViewController: UITableViewController {
         return 1
     }
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return comic.images.count
+        return comic.images!.count
     }
 
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -59,8 +59,8 @@ class ReaderViewController: UITableViewController {
 
         weak var weakCell = cell
         let idx = indexPath.row
+        let path = self.comic.path! + "/" + self.comic.images![idx]
         dispatch_async(smbWorkQueue) {
-            let path = self.comic.dirPath + "/" + self.comic.images[idx]
             guard let f = self.fm.openFile(forReadingAtPath: path) else { return }
             let data = f.readDataToEndOfFile()
             f.closeFile()

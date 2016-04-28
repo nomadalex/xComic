@@ -7,15 +7,56 @@
 //
 
 import UIKit
+import CoreData
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    var managedObjectContext: NSManagedObjectContext!
 
+    var documentURL: NSURL {
+        get {
+            let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
+            return urls[urls.endIndex-1]
+        }
+    }
+
+    func initCoreData() {
+        // Override point for customization after application launch.
+        guard let modelURL = NSBundle.mainBundle().URLForResource("Model", withExtension:"momd") else {
+            fatalError("Error loading model from bundle")
+        }
+        // The managed object model for the application. It is a fatal error for the application not to be able to find and load its model.
+        guard let mom = NSManagedObjectModel(contentsOfURL: modelURL) else {
+            fatalError("Error initializing mom from: \(modelURL)")
+        }
+        let psc = NSPersistentStoreCoordinator(managedObjectModel: mom)
+        managedObjectContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
+        managedObjectContext.persistentStoreCoordinator = psc
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
+            let storeURL = self.documentURL.URLByAppendingPathComponent("Model.sqlite")
+            do {
+                try psc.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: storeURL, options: nil)
+            } catch {
+                fatalError("Error migrating store: \(error)")
+            }
+        }
+    }
+
+    func saveCoreData() {
+        do {
+            try managedObjectContext.save()
+        } catch {
+            fatalError("Failure to save context: \(error)")
+        }
+    }
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        // Override point for customization after application launch.
+        initCoreData()
+        let controller = self.window?.rootViewController as! LibraryViewController
+        controller.managedObjectContext = managedObjectContext
+        controller.documentURL = documentURL
         return true
     }
 
@@ -27,6 +68,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidEnterBackground(application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        saveCoreData()
     }
 
     func applicationWillEnterForeground(application: UIApplication) {

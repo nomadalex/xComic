@@ -23,6 +23,9 @@
 		4B40C51C1CCD96270082027B /* SMBService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B40C5191CCD96270082027B /* SMBService.swift */; };
 		4B40C51E1CCDAC4A0082027B /* LibraryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B40C51D1CCDAC4A0082027B /* LibraryViewController.swift */; };
 		4B7AA9E81CCFCB4900362FB8 /* ReaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7AA9E71CCFCB4900362FB8 /* ReaderViewController.swift */; };
+		4B7AA9EB1CD0770800362FB8 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4B7AA9E91CD0770800362FB8 /* Model.xcdatamodeld */; };
+		4B7AA9F51CD079FD00362FB8 /* ComicRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7AA9F31CD079FD00362FB8 /* ComicRecord.swift */; };
+		4BC5BF451CD1FF8600C8985C /* ComicRecord+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC5BF441CD1FF8600C8985C /* ComicRecord+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +71,9 @@
 		4B40C5191CCD96270082027B /* SMBService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SMBService.swift; sourceTree = "<group>"; };
 		4B40C51D1CCDAC4A0082027B /* LibraryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryViewController.swift; sourceTree = "<group>"; };
 		4B7AA9E71CCFCB4900362FB8 /* ReaderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReaderViewController.swift; sourceTree = "<group>"; };
+		4B7AA9EA1CD0770800362FB8 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		4B7AA9F31CD079FD00362FB8 /* ComicRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComicRecord.swift; sourceTree = "<group>"; };
+		4BC5BF441CD1FF8600C8985C /* ComicRecord+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ComicRecord+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		6ACC86C60199AD74838038D1 /* Pods-xComic.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-xComic.release.xcconfig"; path = "Pods/Target Support Files/Pods-xComic/Pods-xComic.release.xcconfig"; sourceTree = "<group>"; };
 		CC34B80BA4F27187B6301487 /* Pods-xComic.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-xComic.debug.xcconfig"; path = "Pods/Target Support Files/Pods-xComic/Pods-xComic.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -130,16 +136,19 @@
 				4B40C4E21CCD907B0082027B /* AppDelegate.swift */,
 				4B40C4E91CCD907B0082027B /* Assets.xcassets */,
 				4B40002E1CCE4FE0006A174A /* ChooserViewController.swift */,
+				4B7AA9F31CD079FD00362FB8 /* ComicRecord.swift */,
+				4BC5BF441CD1FF8600C8985C /* ComicRecord+CoreDataProperties.swift */,
 				4B40C5031CCD94A70082027B /* dummy.m */,
 				4B40C4EE1CCD907B0082027B /* Info.plist */,
 				4B40C4EB1CCD907B0082027B /* LaunchScreen.storyboard */,
 				4B40C51D1CCDAC4A0082027B /* LibraryViewController.swift */,
 				4B40C4E61CCD907B0082027B /* Main.storyboard */,
+				4B7AA9E91CD0770800362FB8 /* Model.xcdatamodeld */,
+				4B7AA9E71CCFCB4900362FB8 /* ReaderViewController.swift */,
 				4B40C5171CCD96270082027B /* SMBFileHandle.swift */,
 				4B40C5181CCD96270082027B /* SMBFileManager.swift */,
 				4B40C5191CCD96270082027B /* SMBService.swift */,
 				4B40C5021CCD94A70082027B /* xComic-Bridging-Header.h */,
-				4B7AA9E71CCFCB4900362FB8 /* ReaderViewController.swift */,
 			);
 			path = xComic;
 			sourceTree = "<group>";
@@ -341,8 +350,11 @@
 				4B40C51A1CCD96270082027B /* SMBFileHandle.swift in Sources */,
 				4B40C5041CCD94A70082027B /* dummy.m in Sources */,
 				4B40C51B1CCD96270082027B /* SMBFileManager.swift in Sources */,
+				4B7AA9EB1CD0770800362FB8 /* Model.xcdatamodeld in Sources */,
+				4BC5BF451CD1FF8600C8985C /* ComicRecord+CoreDataProperties.swift in Sources */,
 				4B40C51E1CCDAC4A0082027B /* LibraryViewController.swift in Sources */,
 				4B40C4E31CCD907B0082027B /* AppDelegate.swift in Sources */,
+				4B7AA9F51CD079FD00362FB8 /* ComicRecord.swift in Sources */,
 				4B7AA9E81CCFCB4900362FB8 /* ReaderViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -562,6 +574,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		4B7AA9E91CD0770800362FB8 /* Model.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				4B7AA9EA1CD0770800362FB8 /* Model.xcdatamodel */,
+			);
+			currentVersion = 4B7AA9EA1CD0770800362FB8 /* Model.xcdatamodel */;
+			path = Model.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 4B40C4D71CCD907B0082027B /* Project object */;
 }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10171" systemVersion="15E65" minimumToolsVersion="Xcode 7.0">
+    <entity name="ComicRecord" representedClassName="ComicRecord" syncable="YES">
+        <attribute name="cur" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="images_" attributeType="Transformable" syncable="YES"/>
+        <attribute name="path" attributeType="String" syncable="YES"/>
+        <attribute name="thumbnail" attributeType="String" syncable="YES"/>
+        <attribute name="title" attributeType="String" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="ComicRecord" positionX="-63" positionY="-18" width="128" height="120"/>
+    </elements>
+</model>
