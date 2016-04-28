@@ -32,8 +32,8 @@ public class SMBService: NSObject {
         let name: String
         let ip: UInt32
         let session: COpaquePointer
-        let user: String?
-        let pass: String?
+        let user: String
+        let pass: String
     }
 
     public static let sharedInstance = SMBService()
@@ -125,6 +125,11 @@ public class SMBService: NSObject {
         return connectedServers[name] != nil
     }
 
+    public func isConnected(name: String, withUser username: String) -> Bool {
+        guard let srv = connectedServers[name] else { return false }
+        return srv.user == username
+    }
+
     public func connect(name: String, ip: UInt32, username: String = "", password: String = "") -> Bool {
         if connectedServers[name] != nil {
             return false
@@ -135,12 +140,12 @@ public class SMBService: NSObject {
             smb_session_destroy(s)
             return false
         }
-        smb_session_set_creds(s, name, username == "" ? " " : username, password == "" ? " " : password)
+        smb_session_set_creds(s, name, username.isEmpty ? " " : username, password.isEmpty ? " " : password)
         guard smb_session_login(s) == 0 else {
             smb_session_destroy(s)
             return false
         }
-        guard username == "" || smb_session_is_guest(s) != 1 else { // here has a bug in libdsm, it report -1 but logined
+        guard username.isEmpty || smb_session_is_guest(s) != 1 else { // here has a bug in libdsm, it report -1 but logined
             smb_session_destroy(s)
             return false
         }
