@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import SVProgressHUD
 import CoreData
+import PINCache
 
 let smbWorkQueue = dispatch_queue_create("com.ifreedomlife.xComic", DISPATCH_QUEUE_SERIAL)
 
@@ -66,7 +67,7 @@ class LibraryViewController: UITableViewController, NSFetchedResultsControllerDe
         let menu = UIAlertController(title: nil, message: "Choose Option", preferredStyle: .ActionSheet)
 
         menu.addAction(UIAlertAction(title: "Add", style: .Default, handler: showChooser))
-        menu.addAction(UIAlertAction(title: "Settings", style: .Default, handler: nil))
+        menu.addAction(UIAlertAction(title: "Clear Cache", style: .Default, handler: clearCache))
         menu.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
 
         menu.popoverPresentationController!.barButtonItem = sender as? UIBarButtonItem
@@ -75,6 +76,10 @@ class LibraryViewController: UITableViewController, NSFetchedResultsControllerDe
 
     func showChooser(sender: AnyObject) {
         self.performSegueWithIdentifier("showComicChooser", sender: nil)
+    }
+
+    func clearCache(sender: AnyObject) {
+        PINCache.sharedCache().removeAllObjects()
     }
 
     private func calcMD5(data: NSData) -> String {
