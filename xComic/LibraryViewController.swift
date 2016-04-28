@@ -119,11 +119,12 @@ class LibraryViewController: UITableViewController, NSFetchedResultsControllerDe
         return newImg
     }
 
-    private func addComicAtPath(context: NSManagedObjectContext, path: String) -> ComicRecord? {
-        let imgs = getImagesInDir(path).sort{ $0 < $1 }
-        guard !imgs.isEmpty else { return nil }
+    private func addComicAtPath(context: NSManagedObjectContext, server: ServerEntry, path: String) -> ComicRecord? {
         let dirName = (path as NSString).lastPathComponent
-        let firstImg = path + "/" + imgs[0]
+        let fullPath = "/\(server.name)/\(path)"
+        let imgs = getImagesInDir(fullPath).sort{ $0 < $1 }
+        guard !imgs.isEmpty else { return nil }
+        let firstImg = fullPath + "/" + imgs[0]
         guard let f = self.fm.openFile(forReadingAtPath: firstImg) else { return nil }
         let data = f.readDataToEndOfFile()
         f.closeFile()
@@ -131,7 +132,7 @@ class LibraryViewController: UITableViewController, NSFetchedResultsControllerDe
         let thumbnail = calcMD5(data) + ".jpg"
         let img = generateThumbnail(UIImage(data: data)!, bounds: CGSize(width: 256, height: 256))
         UIImageJPEGRepresentation(img, 0.7)?.writeToURL(documentURL.URLByAppendingPathComponent(thumbnail), atomically: true)
-        return ComicRecord(context: context, title: dirName, thumbnail: thumbnail, path: path, images: imgs)
+        return ComicRecord(context: context, server: server, title: dirName, thumbnail: thumbnail, path: path, images: imgs)
     }
 
     // MARK: - Segues
@@ -145,14 +146,14 @@ class LibraryViewController: UITableViewController, NSFetchedResultsControllerDe
         }
         if segue.identifier == "showComicChooser" {
             let controller = segue.destinationViewController as! ChooserViewController
-            controller.chooseCompletion = { paths in
+            controller.chooseCompletion = { ret in
+                let (server, path) = ret
                 SVProgressHUD.showWithMaskType(.Gradient)
                 dispatch_async(smbWorkQueue, {
                     let moc = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
                     moc.parentContext = self.managedObjectContext
-                    for path in paths {
-                        self.addComicAtPath(moc, path: "/" + path.0 + "/" + path.1)
-                    }
+                    self.addComicAtPath(moc, server: server, path: path)
+
                     do {
                         try moc.save()
                     } catch {
@@ -166,7 +167,40 @@ class LibraryViewController: UITableViewController, NSFetchedResultsControllerDe
         }
     }
 
+    private func showAlertErrorDialog(msg: String) {
+        let alertController = UIAlertController(title: "Error", message: msg, preferredStyle: .Alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+        self.presentViewController(alertController, animated: true, completion: nil)
+    }
+
     // MARK: - Table View
+
+    override func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
+        let comic = comicFetchs.objectAtIndexPath(indexPath) as! ComicRecord
+        let srv = comic.server!
+
+        SVProgressHUD.showWithMaskType(.Gradient)
+        dispatch_async(smbWorkQueue) {
+            let ss = SMBService.sharedInstance
+            if !ss.isConnected(srv.name, withUser: srv.username) {
+                if ss.isConnected(srv.name) {
+                    ss.disconnect(srv.name)
+                }
+                guard ss.connect(srv.name, ip: srv.ip, username: srv.username, password: srv.password) else {
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.tableView.deselectRowAtIndexPath(indexPath, animated: false)
+                        self.showAlertErrorDialog("Can not connect server!")
+                    }
+                    return
+                }
+            }
+            dispatch_async(dispatch_get_main_queue()) {
+                SVProgressHUD.dismiss()
+                self.performSegueWithIdentifier("showComic", sender: nil)
+            }
+        }
+        return indexPath
+    }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let sections = comicFetchs.sections

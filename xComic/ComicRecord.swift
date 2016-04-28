@@ -15,15 +15,28 @@ class ComicRecord: NSManagedObject {
         get {
             return images_ as? [String]
         }
+        set {
+            images_ = newValue
+        }
     }
 
-    convenience init(context: NSManagedObjectContext, title: String, thumbnail: String, path: String, images: [String]) {
+    var server: ServerEntry? {
+        get {
+            return server_ as? ServerEntry
+        }
+        set {
+            server_ = newValue
+        }
+    }
+
+    convenience init(context: NSManagedObjectContext, server: ServerEntry, title: String, thumbnail: String, path: String, images: [String]) {
         let entity = NSEntityDescription.entityForName("ComicRecord", inManagedObjectContext: context)!
         self.init(entity: entity, insertIntoManagedObjectContext: context)
+        self.server = server
         self.title = title
         self.thumbnail = thumbnail
         self.path = path
-        self.images_ = images
+        self.images = images
         self.cur = 0
     }
 }

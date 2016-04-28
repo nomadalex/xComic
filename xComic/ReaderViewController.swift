@@ -41,6 +41,13 @@ class ReaderViewController: UITableViewController {
         navigationController!.setNavigationBarHidden(!isShowTop, animated: true)
     }
 
+    private func getComicImageFullPath(idx: Int) -> String {
+        let srvName = comic.server!.name
+        let dir = comic.path!
+        let fn = comic.images![idx]
+        return "/\(srvName)/\(dir)/\(fn)"
+    }
+
     // MARK: - Table View
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -59,7 +66,7 @@ class ReaderViewController: UITableViewController {
 
         weak var weakCell = cell
         let idx = indexPath.row
-        let path = self.comic.path! + "/" + self.comic.images![idx]
+        let path = getComicImageFullPath(idx)
         dispatch_async(smbWorkQueue) {
             guard let f = self.fm.openFile(forReadingAtPath: path) else { return }
             let data = f.readDataToEndOfFile()

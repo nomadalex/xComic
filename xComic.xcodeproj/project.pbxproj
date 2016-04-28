@@ -26,6 +26,7 @@
 		4B7AA9EB1CD0770800362FB8 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4B7AA9E91CD0770800362FB8 /* Model.xcdatamodeld */; };
 		4B7AA9F51CD079FD00362FB8 /* ComicRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7AA9F31CD079FD00362FB8 /* ComicRecord.swift */; };
 		4BC5BF451CD1FF8600C8985C /* ComicRecord+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC5BF441CD1FF8600C8985C /* ComicRecord+CoreDataProperties.swift */; };
+		4BC5BF471CD219FD00C8985C /* ServerEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC5BF461CD219FD00C8985C /* ServerEntry.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,6 +75,7 @@
 		4B7AA9EA1CD0770800362FB8 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		4B7AA9F31CD079FD00362FB8 /* ComicRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComicRecord.swift; sourceTree = "<group>"; };
 		4BC5BF441CD1FF8600C8985C /* ComicRecord+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ComicRecord+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		4BC5BF461CD219FD00C8985C /* ServerEntry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerEntry.swift; sourceTree = "<group>"; };
 		6ACC86C60199AD74838038D1 /* Pods-xComic.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-xComic.release.xcconfig"; path = "Pods/Target Support Files/Pods-xComic/Pods-xComic.release.xcconfig"; sourceTree = "<group>"; };
 		CC34B80BA4F27187B6301487 /* Pods-xComic.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-xComic.debug.xcconfig"; path = "Pods/Target Support Files/Pods-xComic/Pods-xComic.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -149,6 +151,7 @@
 				4B40C5181CCD96270082027B /* SMBFileManager.swift */,
 				4B40C5191CCD96270082027B /* SMBService.swift */,
 				4B40C5021CCD94A70082027B /* xComic-Bridging-Header.h */,
+				4BC5BF461CD219FD00C8985C /* ServerEntry.swift */,
 			);
 			path = xComic;
 			sourceTree = "<group>";
@@ -346,6 +349,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B40C51C1CCD96270082027B /* SMBService.swift in Sources */,
+				4BC5BF471CD219FD00C8985C /* ServerEntry.swift in Sources */,
 				4B40002F1CCE4FE0006A174A /* ChooserViewController.swift in Sources */,
 				4B40C51A1CCD96270082027B /* SMBFileHandle.swift in Sources */,
 				4B40C5041CCD94A70082027B /* dummy.m in Sources */,

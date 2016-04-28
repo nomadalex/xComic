@@ -19,5 +19,6 @@ extension ComicRecord {
     @NSManaged var images_: NSObject?
     @NSManaged var thumbnail: String?
     @NSManaged var title: String?
+    @NSManaged var server_: NSObject?
 
 }

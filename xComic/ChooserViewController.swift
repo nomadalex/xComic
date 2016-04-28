@@ -12,19 +12,28 @@ import SVProgressHUD
 
 class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UINavigationBarDelegate {
 
-    private struct Server {
+    private class Server {
         let name: String
         let ip: UInt32
         let ipStr: String
+        var username = ""
+        var password = ""
+
+        init(name: String, ip: UInt32, ipStr: String) {
+            self.name = name
+            self.ip = ip
+            self.ipStr = ipStr
+        }
     }
 
     private var servers = [Server]()
     private var pathStack = [String]()
     private var fileList = [String]()
+    private var curServer: Server?
 
     private var isLoginMode = false
 
-    var chooseCompletion: (([(String, String)]) -> Void)? = nil
+    var chooseCompletion: (((ServerEntry, String)) -> Void)?
 
     @IBOutlet var navBar: UINavigationBar!
     @IBOutlet var tableView: UITableView!
@@ -69,7 +78,8 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
     func selectFolder(sender: AnyObject) {
         let path = pathStack[1..<pathStack.endIndex].joinWithSeparator("/")
         dismissSelf(self)
-        chooseCompletion?([(pathStack[0], path)])
+        guard let srv = self.curServer else { return }
+        chooseCompletion?((ServerEntry(name: srv.name, ip: srv.ip, username: srv.username, password: srv.password), path))
     }
 
     func enterLoginMode(sender: AnyObject) {
@@ -111,8 +121,13 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
             let loginTextField = alertController.textFields![0] as UITextField
             let passwordTextField = alertController.textFields![1] as UITextField
 
-            self.loginServer(idx, username: loginTextField.text!, password: passwordTextField.text!) { succ in
+            let user = loginTextField.text!
+            let pass = passwordTextField.text!
+            self.loginServer(idx, username: user, password: pass) { succ in
                 if succ {
+                    let srv = self.servers[idx]
+                    srv.username = user
+                    srv.password = pass
                     completion?(true)
                 } else {
                     self.showLogin(idx, completion: completion)
@@ -175,6 +190,7 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
                 fm.changeCurrentDirectoryPath("/")
                 guard fm.changeCurrentDirectoryPath(fn) else { return nil }
                 let fileList = fm.contentsOfDirectoryAtPath("").filter{ fm.directoryExistsAtPath($0) }
+                self.curServer = self.servers[idx]
                 return (fn, title, fileList)
             })
         } else {
@@ -193,10 +209,9 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
     func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
         if isLoginMode {
             showLogin(indexPath.row) { succ in
-                if succ {
-                    self.exitLoginMode(self.navBar.topItem!.rightBarButtonItem!)
-                    self.navToNext(indexPath.row)
-                }
+                guard succ else { return }
+                self.exitLoginMode(self.navBar.topItem!.rightBarButtonItem!)
+                self.navToNext(indexPath.row)
             }
         } else {
             navToNext(indexPath.row)
@@ -208,6 +223,7 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
     func navigationBar(navigationBar: UINavigationBar, shouldPopItem item: UINavigationItem) -> Bool {
         pathStack.popLast()
         if pathStack.isEmpty {
+            self.curServer = nil
             tableView.reloadData()
             return true
         }
@@ -231,6 +247,7 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
                     self.pathStack.removeAll()
                     let items = self.navBar.items!
                     self.navBar.setItems([items.first!], animated: true)
+                    self.curServer = nil
                 }
                 self.tableView.reloadData()
                 SVProgressHUD.dismiss()

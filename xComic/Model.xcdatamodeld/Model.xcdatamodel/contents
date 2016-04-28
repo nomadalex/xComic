@@ -4,10 +4,11 @@
         <attribute name="cur" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="images_" attributeType="Transformable" syncable="YES"/>
         <attribute name="path" attributeType="String" syncable="YES"/>
+        <attribute name="server_" attributeType="Transformable" syncable="YES"/>
         <attribute name="thumbnail" attributeType="String" syncable="YES"/>
         <attribute name="title" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="ComicRecord" positionX="-63" positionY="-18" width="128" height="120"/>
+        <element name="ComicRecord" positionX="-63" positionY="-18" width="128" height="135"/>
     </elements>
 </model>
