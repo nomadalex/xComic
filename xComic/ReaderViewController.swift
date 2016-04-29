@@ -30,6 +30,9 @@ class ReaderViewController: UITableViewController {
         title = comic.title!
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Goto", style: .Plain, target: self, action: #selector(showGotoPageDialog))
+
+        tableView.transform = CGAffineTransformMakeRotation(-CGFloat(M_PI_2))
+        tableView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, 0, tableView.bounds.height - 7)
     }
 
     override func prefersStatusBarHidden() -> Bool {
@@ -109,11 +112,13 @@ class ReaderViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return tableView.frame.height
+        return tableView.frame.width
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! ReaderCell
+
+        cell.transform = CGAffineTransformMakeRotation(CGFloat(M_PI_2))
 
         weak var weakCell = cell
         func setContentAsync(img: UIImage) {
