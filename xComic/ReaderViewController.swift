@@ -17,6 +17,9 @@ class ReaderCell: UITableViewCell {
 }
 
 class ReaderViewController: UITableViewController {
+    private let leftZoneRatio: CGFloat = 0.3
+    private let rightZoneRatio: CGFloat = 0.3
+
     var comic: ComicRecord!
 
     private var isShowTop = false
@@ -43,21 +46,44 @@ class ReaderViewController: UITableViewController {
         return .Slide
     }
 
-    @IBAction func toggleTopDisplay(sender: AnyObject) {
-        isShowTop = !isShowTop
-        setNeedsStatusBarAppearanceUpdate()
-        navigationController!.setNavigationBarHidden(!isShowTop, animated: true)
+    private func getCurrentPage() -> Int {
+        let offset = tableView.contentOffset
+        let cur = Int(offset.y / tableView.bounds.height)
+        return cur + 1
+    }
+
+    @IBAction func tapOnTableView(sender: AnyObject) {
+        let g = sender as! UIGestureRecognizer
+        let bounds = g.view!.bounds
+        var pt = g.locationInView(g.view)
+        pt.y -= tableView.contentOffset.y
+        if pt.y <= bounds.height * leftZoneRatio {
+            let cur = getCurrentPage()
+            if cur > 1 {
+                tableView.contentOffset = CGPoint(x: 0, y: CGFloat(cur-2) * tableView.bounds.height)
+            }
+        } else if pt.y >= bounds.height * (1 - rightZoneRatio) {
+            let cur = getCurrentPage()
+            if cur < comic.images!.count {
+                tableView.contentOffset = CGPoint(x: 0, y: CGFloat(cur) * tableView.bounds.height)
+            }
+        } else {
+            isShowTop = !isShowTop
+            setNeedsStatusBarAppearanceUpdate()
+            navigationController!.setNavigationBarHidden(!isShowTop, animated: true)
+        }
     }
 
     override func viewWillAppear(animated: Bool) {
         let cur = comic.cur! as Int
-        tableView.contentOffset = CGPoint(x: 0, y: CGFloat(cur-1) * tableView.frame.width)
+        // delay it because the transform not apply now
+        dispatch_async(dispatch_get_main_queue()) {
+            self.tableView.contentOffset = CGPoint(x: 0, y: CGFloat(cur-1) * self.tableView.bounds.height)
+        }
     }
 
     override func viewWillDisappear(animated: Bool) {
-        let offset = tableView.contentOffset
-        let cur = Int(offset.y / tableView.frame.width)
-        comic.cur = cur + 1
+        comic.cur = getCurrentPage()
     }
 
     func showGotoPageDialog(sender: AnyObject) {

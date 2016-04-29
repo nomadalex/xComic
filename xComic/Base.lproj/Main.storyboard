@@ -201,7 +201,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WgP-my-xuI" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tapGestureRecognizer id="7DV-Pd-YII">
                     <connections>
-                        <action selector="toggleTopDisplay:" destination="TRu-QT-SI8" id="DdM-NA-QmH"/>
+                        <action selector="tapOnTableView:" destination="TRu-QT-SI8" id="x9V-KT-jJo"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>
