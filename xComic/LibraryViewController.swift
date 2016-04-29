@@ -158,7 +158,7 @@ class LibraryViewController: UITableViewController, NSFetchedResultsControllerDe
             controller.chooseCompletion = { ret in
                 let (server, path) = ret
                 SVProgressHUD.showWithMaskType(.Gradient)
-                dispatch_async(smbWorkQueue, {
+                dispatch_async(smbWorkQueue, { [unowned self] in
                     let moc = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
                     moc.parentContext = self.managedObjectContext
                     self.addComicAtPath(moc, server: server, path: path)
