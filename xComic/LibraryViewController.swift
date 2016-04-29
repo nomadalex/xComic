@@ -21,6 +21,10 @@ class LibraryCell: UITableViewCell {
     var titleLabel: UILabel!
     @IBOutlet
     var progressLabel: UILabel!
+    @IBOutlet
+    var widthContraint: NSLayoutConstraint!
+    @IBOutlet
+    var heightContraint: NSLayoutConstraint!
 }
 
 class LibraryViewController: UITableViewController, NSFetchedResultsControllerDelegate {
@@ -218,8 +222,12 @@ class LibraryViewController: UITableViewController, NSFetchedResultsControllerDe
 
         cell.titleLabel.text = comic.title
         let fileUrl = documentURL.URLByAppendingPathComponent(comic.thumbnail!)
-        cell.thumbnailImg.image = UIImage(contentsOfFile: fileUrl.path!)
+        let img = UIImage(contentsOfFile: fileUrl.path!)!
+        cell.thumbnailImg.image = img
         cell.progressLabel.text = "\(comic.cur!) / \(comic.images!.count)"
+        let ratio = min(178.0 / img.size.width, 178.0 / img.size.height)
+        cell.widthContraint.constant = img.size.width * ratio
+        cell.heightContraint.constant = img.size.height * ratio
 
         return cell
     }
