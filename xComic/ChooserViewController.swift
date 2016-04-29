@@ -189,7 +189,7 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
 
                 fm.changeCurrentDirectoryPath("/")
                 guard fm.changeCurrentDirectoryPath(fn) else { return nil }
-                let fileList = fm.contentsOfDirectoryAtPath("").filter{ fm.directoryExistsAtPath($0) }
+                let fileList = fm.contentsOfDirectoryAtPath("").filter({ fm.directoryExistsAtPath($0) }).sort({ $0 < $1 })
                 self.curServer = self.servers[idx]
                 return (fn, title, fileList)
             })
@@ -200,7 +200,7 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
             runInBackground({
                 guard fm.directoryExistsAtPath(fn) else { return nil }
                 guard fm.changeCurrentDirectoryPath(fn) else { return nil }
-                let fileList = fm.contentsOfDirectoryAtPath("").filter{ fm.directoryExistsAtPath($0) }
+                let fileList = fm.contentsOfDirectoryAtPath("").filter({ fm.directoryExistsAtPath($0) }).sort({ $0 < $1 })
                 return (fn, title, fileList)
             })
         }
