@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -40,45 +41,41 @@
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GbC-IX-LsB">
                                             <rect key="frame" x="216" y="8" width="384" height="24"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="384" id="cLh-T4-LtG"/>
-                                            </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="vyt-Hx-LkH">
-                                            <rect key="frame" x="21" y="0.0" width="177" height="173"/>
-                                            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="173" id="OAB-Pd-guR"/>
-                                                <constraint firstAttribute="width" constant="177" id="t13-jc-6yj"/>
-                                            </constraints>
-                                        </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Progress" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LZR-6O-HWN">
-                                            <rect key="frame" x="216" y="40" width="117" height="17"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="117" id="bAd-t3-ZRM"/>
-                                            </constraints>
+                                            <rect key="frame" x="216" y="40" width="58" height="17"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="vyt-Hx-LkH">
+                                            <rect key="frame" x="30" y="2" width="178" height="178"/>
+                                            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="178" id="OAB-Pd-guR"/>
+                                                <constraint firstAttribute="width" constant="178" id="t13-jc-6yj"/>
+                                            </constraints>
+                                        </imageView>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="vyt-Hx-LkH" firstAttribute="centerY" secondItem="PCL-Bh-kbD" secondAttribute="centerY" constant="-4" id="FHN-MF-NLN"/>
-                                        <constraint firstItem="LZR-6O-HWN" firstAttribute="leading" secondItem="vyt-Hx-LkH" secondAttribute="trailing" priority="999" constant="18" id="FoL-8M-qim"/>
-                                        <constraint firstItem="LZR-6O-HWN" firstAttribute="top" secondItem="GbC-IX-LsB" secondAttribute="bottom" constant="8" symbolic="YES" id="XPc-ha-JLX"/>
+                                        <constraint firstItem="LZR-6O-HWN" firstAttribute="top" secondItem="PCL-Bh-kbD" secondAttribute="topMargin" constant="32" id="0eB-YR-nqg"/>
+                                        <constraint firstItem="vyt-Hx-LkH" firstAttribute="centerY" secondItem="PCL-Bh-kbD" secondAttribute="centerY" constant="0.5" id="FHN-MF-NLN"/>
+                                        <constraint firstItem="LZR-6O-HWN" firstAttribute="leading" secondItem="PCL-Bh-kbD" secondAttribute="leadingMargin" constant="208" id="Ppc-dz-SLk"/>
                                         <constraint firstItem="GbC-IX-LsB" firstAttribute="top" secondItem="PCL-Bh-kbD" secondAttribute="topMargin" id="Y1V-H8-UOP"/>
-                                        <constraint firstItem="vyt-Hx-LkH" firstAttribute="leading" secondItem="PCL-Bh-kbD" secondAttribute="leadingMargin" constant="13" id="fh2-85-lc7"/>
+                                        <constraint firstItem="GbC-IX-LsB" firstAttribute="leading" secondItem="PCL-Bh-kbD" secondAttribute="leadingMargin" constant="208" id="cqS-aq-Uhv"/>
+                                        <constraint firstItem="vyt-Hx-LkH" firstAttribute="centerX" secondItem="PCL-Bh-kbD" secondAttribute="leadingMargin" constant="111" id="fh2-85-lc7"/>
                                         <constraint firstAttribute="trailing" secondItem="GbC-IX-LsB" secondAttribute="trailing" id="keF-oF-Ms8"/>
-                                        <constraint firstItem="GbC-IX-LsB" firstAttribute="leading" secondItem="LZR-6O-HWN" secondAttribute="leading" id="oc9-wP-T6H"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="heightContraint" destination="OAB-Pd-guR" id="2qb-yJ-hEX"/>
                                     <outlet property="progressLabel" destination="LZR-6O-HWN" id="xW5-x5-faV"/>
                                     <outlet property="thumbnailImg" destination="vyt-Hx-LkH" id="6py-aC-gZQ"/>
                                     <outlet property="titleLabel" destination="GbC-IX-LsB" id="RvV-yR-wtJ"/>
+                                    <outlet property="widthContraint" destination="t13-jc-6yj" id="7Le-UZ-XcH"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
