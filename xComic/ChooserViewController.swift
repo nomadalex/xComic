@@ -26,6 +26,8 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
 
+    private static var lastSelectRecord: (server: Server, path: String)?
+
     private var servers = [Server]()
     private var pathStack = [String]()
     private var fileList = [String]()
@@ -45,6 +47,51 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
         navItem.title = "Servers"
         navItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .Plain, target: self, action: #selector(dismissSelf))
         navItem.rightBarButtonItem = UIBarButtonItem(title: "Login", style: .Plain, target: self, action: #selector(enterLoginMode))
+
+        if let (server, path) = ChooserViewController.lastSelectRecord {
+            servers.append(server)
+            curServer = server
+            pathStack.append("\(server.ipStr)")
+            pushNavItemWithTitle(server.name, animated: false)
+            SVProgressHUD.showWithMaskType(.Gradient)
+            dispatch_async(smbWorkQueue) {
+                let ss = SMBService.sharedInstance
+                if !ss.isConnected(server.name, withUser: server.username) {
+                    if ss.isConnected(server.name) {
+                        ss.disconnect(server.name)
+                    }
+
+                    guard ss.connect(server.name, ip: server.ip, username: server.username, password: server.password) else {
+                        dispatch_async(dispatch_get_main_queue()) {
+                            self.pathStack.popLast()
+                            self.navBar.popNavigationItemAnimated(false)
+                            SVProgressHUD.dismiss()
+                        }
+                        return
+                    }
+                }
+
+                let fm = SMBFileManager.sharedInstance
+                guard fm.changeCurrentDirectoryPath("/\(server.ipStr)/\(path)") else {
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.pathStack.popLast()
+                        self.navBar.popNavigationItemAnimated(false)
+                        SVProgressHUD.dismiss()
+                    }
+                    return
+                }
+                let fileList = fm.contentsOfDirectoryAtPath("").filter({ fm.directoryExistsAtPath($0) }).sort({ $0 < $1 })
+                dispatch_async(dispatch_get_main_queue()) {
+                    for p in path.componentsSeparatedByString("/") {
+                        self.pathStack.append(p)
+                        self.pushNavItemWithTitle(p, animated: false)
+                    }
+                    self.fileList = fileList
+                    self.tableView.reloadData()
+                    SVProgressHUD.dismiss()
+                }
+            }
+        }
 
         SMBService.sharedInstance.startDiscoveryWithTimeout(added:
             { entry in
@@ -79,6 +126,7 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
         let path = pathStack[1..<pathStack.endIndex].joinWithSeparator("/")
         dismissSelf(self)
         guard let srv = self.curServer else { return }
+        ChooserViewController.lastSelectRecord = (srv, path)
         chooseCompletion?((ServerEntry(name: srv.name, ip: srv.ip, username: srv.username, password: srv.password), path))
     }
 
@@ -154,6 +202,14 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.presentViewController(alertController, animated: true, completion: nil)
     }
 
+    private func pushNavItemWithTitle(title: String, animated: Bool) {
+        let item = UINavigationItem(title: title)
+        if self.pathStack.count >= 2 {
+            item.rightBarButtonItem = UIBarButtonItem(title: "Select", style: .Plain, target: self, action: #selector(self.selectFolder))
+        }
+        self.navBar.pushNavigationItem(item, animated: animated)
+    }
+
     private func navToNext(idx: Int) {
         func runInBackground(block: () -> (String, String, [String])?) {
             SVProgressHUD.showWithMaskType(.Gradient)
@@ -162,11 +218,7 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
                 dispatch_async(dispatch_get_main_queue(), {
                     if let (fn, title, fileList) = ret {
                         self.pathStack.append(fn)
-                        let item = UINavigationItem(title: title)
-                        if self.pathStack.count >= 2 {
-                            item.rightBarButtonItem = UIBarButtonItem(title: "Select", style: .Plain, target: self, action: #selector(self.selectFolder))
-                        }
-                        self.navBar.pushNavigationItem(item, animated: true)
+                        self.pushNavItemWithTitle(title, animated: true)
                         self.fileList = fileList
                         self.tableView.reloadData()
                     }
