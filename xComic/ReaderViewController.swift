@@ -28,6 +28,8 @@ class ReaderViewController: UITableViewController {
 
         navigationController!.navigationBarHidden = !isShowTop
         title = comic.title!
+
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Goto", style: .Plain, target: self, action: #selector(showGotoPageDialog))
     }
 
     override func prefersStatusBarHidden() -> Bool {
@@ -42,6 +44,52 @@ class ReaderViewController: UITableViewController {
         isShowTop = !isShowTop
         setNeedsStatusBarAppearanceUpdate()
         navigationController!.setNavigationBarHidden(!isShowTop, animated: true)
+    }
+
+    override func viewWillAppear(animated: Bool) {
+        let cur = comic.cur! as Int
+        tableView.contentOffset = CGPoint(x: 0, y: CGFloat(cur-1) * tableView.frame.width)
+    }
+
+    override func viewWillDisappear(animated: Bool) {
+        let offset = tableView.contentOffset
+        let cur = Int(offset.y / tableView.frame.width)
+        comic.cur = cur + 1
+    }
+
+    func showGotoPageDialog(sender: AnyObject) {
+        let controller = UIAlertController(title: "Goto", message: nil, preferredStyle: .Alert)
+
+        let okAction = UIAlertAction(title: "OK", style: .Default) { _ in
+            let pageTextField = controller.textFields![0] as UITextField
+
+            guard let page = Int(pageTextField.text!) else { return }
+            self.gotoPage(page)
+        }
+
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+
+        controller.addTextFieldWithConfigurationHandler { textField in
+            textField.placeholder = self.comic.images!.count.description
+
+            NSNotificationCenter.defaultCenter().addObserverForName(UITextFieldTextDidChangeNotification, object: textField, queue: NSOperationQueue.mainQueue()) { _ in
+                guard let page = Int(textField.text!) else {
+                    okAction.enabled = false
+                    return
+                }
+                okAction.enabled = 1...self.comic.images!.count ~= page
+            }
+        }
+
+        controller.addAction(okAction)
+        controller.addAction(cancelAction)
+
+        presentViewController(controller, animated: true, completion: nil)
+    }
+
+    private func gotoPage(page: Int) {
+        comic.cur = page
+        tableView.contentOffset = CGPoint(x: 0, y: CGFloat(page-1) * tableView.frame.width)
     }
 
     private func getComicImageFullPath(idx: Int) -> String {

@@ -259,8 +259,9 @@ class LibraryViewController: UITableViewController, NSFetchedResultsControllerDe
         case .Delete:
             tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
         case .Update:
-            //configureCell(self.tableView.cellForRowAtIndexPath(indexPath!)!, indexPath: indexPath!)
-            print("update \(anObject)")
+            let comic = anObject as! ComicRecord
+            let cell = tableView.cellForRowAtIndexPath(indexPath!) as! LibraryCell
+            cell.progressLabel.text = "\(comic.cur!) / \(comic.images!.count)"
         case .Move:
             //tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
             //tableView.insertRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
