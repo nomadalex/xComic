@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import libdsm
 
 public class SMBFileHandle: NSObject {
     private var session: COpaquePointer = nil

@@ -1,0 +1,4 @@
+module libdsm [extern_c] {
+    header "bdsm/bdsm.h"
+    export *
+}

@@ -1,0 +1,4 @@
+module libtasn1 [system] [extern_c] {
+    header "libtasn1.h"
+    export *
+}

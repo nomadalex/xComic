@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import libdsm
 
 public class SMBFileManager: NSObject {
     private let SMB_MOD_RO = SMB_MOD_READ | SMB_MOD_READ_EXT | SMB_MOD_READ_ATTR | SMB_MOD_READ_CTL

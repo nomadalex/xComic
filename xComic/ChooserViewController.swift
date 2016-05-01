@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import SVProgressHUD
+import SMBClientSwift
 
 class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UINavigationBarDelegate {
 
@@ -55,7 +56,7 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
             pushNavItemWithTitle(server.name, animated: false)
             SVProgressHUD.showWithMaskType(.Gradient)
             dispatch_async(smbWorkQueue) {
-                let ss = SMBService.sharedInstance
+                let ss = SMBClient.sharedInstance
                 if !ss.isConnected(server.name, withUser: server.username) {
                     if ss.isConnected(server.name) {
                         ss.disconnect(server.name)
@@ -93,7 +94,7 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
         }
 
-        SMBService.sharedInstance.startDiscoveryWithTimeout(added:
+        SMBClient.sharedInstance.startDiscoveryWithTimeout(added:
             { entry in
                 if self.servers.indexOf({ $0.name == entry.name }) == nil {
                     self.servers.append(Server(name: entry.name, ip: entry.ip, ipStr: entry.ipStr()))
@@ -115,7 +116,7 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
 
     deinit {
-        SMBService.sharedInstance.stopDiscovery()
+        SMBClient.sharedInstance.stopDiscovery()
     }
 
     func dismissSelf(sender: AnyObject) {
@@ -148,7 +149,7 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
         SVProgressHUD.showWithMaskType(.Gradient)
         dispatch_async(smbWorkQueue, {
             let srv = self.servers[idx]
-            let sm = SMBService.sharedInstance
+            let sm = SMBClient.sharedInstance
 
             if sm.isConnected(srv.name) {
                 sm.disconnect(srv.name)
@@ -235,8 +236,8 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
             let title = server.name
 
             runInBackground({
-                if !SMBService.sharedInstance.isConnected(server.name) {
-                    guard SMBService.sharedInstance.connect(server.name, ip: server.ip) else { return nil }
+                if !SMBClient.sharedInstance.isConnected(server.name) {
+                    guard SMBClient.sharedInstance.connect(server.name, ip: server.ip) else { return nil }
                 }
 
                 fm.changeCurrentDirectoryPath("/")

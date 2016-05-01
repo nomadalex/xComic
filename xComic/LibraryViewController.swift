@@ -11,6 +11,7 @@ import UIKit
 import SVProgressHUD
 import CoreData
 import PINCache
+import SMBClientSwift
 
 let smbWorkQueue = dispatch_queue_create("com.ifreedomlife.xComic", DISPATCH_QUEUE_SERIAL)
 
@@ -190,7 +191,7 @@ class LibraryViewController: UITableViewController, NSFetchedResultsControllerDe
 
         SVProgressHUD.showWithMaskType(.Gradient)
         dispatch_async(smbWorkQueue) {
-            let ss = SMBService.sharedInstance
+            let ss = SMBClient.sharedInstance
             if !ss.isConnected(srv.name, withUser: srv.username) {
                 if ss.isConnected(srv.name) {
                     ss.disconnect(srv.name)

@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import PINCache
+import SMBClientSwift
 
 class ReaderCell: UITableViewCell {
     @IBOutlet var contentImage: UIImageView!

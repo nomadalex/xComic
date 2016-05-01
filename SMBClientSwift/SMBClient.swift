@@ -1,5 +1,5 @@
 //
-//  SMBService.swift
+//  SMBClient.swift
 //  ComicSMB
 //
 //  Created by Kun Wang on 4/23/16.
@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import libdsm
 
 private func ipToStr(ip: UInt32) -> String {
     let byte1 = UInt8(ip & 0xff)
@@ -26,7 +27,7 @@ public struct SMBServerEntry {
     }
 }
 
-public class SMBService: NSObject {
+public class SMBClient: NSObject {
 
     private struct Server {
         let name: String
@@ -36,7 +37,7 @@ public class SMBService: NSObject {
         let pass: String
     }
 
-    public static let sharedInstance = SMBService()
+    public static let sharedInstance = SMBClient()
 
     private var nameService: COpaquePointer = netbios_ns_new()
 
@@ -78,7 +79,7 @@ public class SMBService: NSObject {
         var callbacks = netbios_ns_discover_callbacks()
         callbacks.p_opaque = UnsafeMutablePointer<Void>(Unmanaged.passUnretained(self).toOpaque())
         callbacks.pf_on_entry_added = { (ptr: UnsafeMutablePointer<Void>, centry: COpaquePointer) in
-            let ser = Unmanaged<SMBService>.fromOpaque(COpaquePointer(ptr)).takeUnretainedValue()
+            let ser = Unmanaged<SMBClient>.fromOpaque(COpaquePointer(ptr)).takeUnretainedValue()
             let name = String.fromCString(netbios_ns_entry_name(centry))
             let ip = netbios_ns_entry_ip(centry)
             dispatch_async(dispatch_get_main_queue()) {
@@ -86,7 +87,7 @@ public class SMBService: NSObject {
             }
         }
         callbacks.pf_on_entry_removed = { (ptr: UnsafeMutablePointer<Void>, centry: COpaquePointer) in
-            let ser = Unmanaged<SMBService>.fromOpaque(COpaquePointer(ptr)).takeUnretainedValue()
+            let ser = Unmanaged<SMBClient>.fromOpaque(COpaquePointer(ptr)).takeUnretainedValue()
             let name = String.fromCString(netbios_ns_entry_name(centry))
             let ip = netbios_ns_entry_ip(centry)
             dispatch_async(dispatch_get_main_queue()) {
