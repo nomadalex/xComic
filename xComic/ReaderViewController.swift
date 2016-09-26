@@ -9,7 +9,6 @@
 import Foundation
 import UIKit
 import PINCache
-import SMBClientSwift
 
 class ReaderCell: UITableViewCell {
     @IBOutlet var contentImage: UIImageView!
@@ -18,45 +17,45 @@ class ReaderCell: UITableViewCell {
 }
 
 class ReaderViewController: UITableViewController {
-    private let leftZoneRatio: CGFloat = 0.3
-    private let rightZoneRatio: CGFloat = 0.3
+    fileprivate let leftZoneRatio: CGFloat = 0.3
+    fileprivate let rightZoneRatio: CGFloat = 0.3
 
     var comic: ComicRecord!
 
-    private var isShowTop = false
-    private let fm = SMBFileManager.sharedInstance
+    fileprivate var isShowTop = false
+    fileprivate let fm = SMBFileManager.sharedInstance
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
 
-        navigationController!.navigationBarHidden = !isShowTop
+        navigationController!.isNavigationBarHidden = !isShowTop
         title = comic.title!
 
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Goto", style: .Plain, target: self, action: #selector(showGotoPageDialog))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Goto", style: .plain, target: self, action: #selector(showGotoPageDialog))
 
-        tableView.transform = CGAffineTransformMakeRotation(-CGFloat(M_PI_2))
+        tableView.transform = CGAffineTransform(rotationAngle: -CGFloat(M_PI_2))
         tableView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, 0, tableView.bounds.height - 7)
     }
 
-    override func prefersStatusBarHidden() -> Bool {
+    override var prefersStatusBarHidden : Bool {
         return !isShowTop
     }
 
-    override func preferredStatusBarUpdateAnimation() -> UIStatusBarAnimation {
-        return .Slide
+    override var preferredStatusBarUpdateAnimation : UIStatusBarAnimation {
+        return .slide
     }
 
-    private func getCurrentPage() -> Int {
+    fileprivate func getCurrentPage() -> Int {
         let offset = tableView.contentOffset
         let cur = Int(offset.y / tableView.bounds.height)
         return cur + 1
     }
 
-    @IBAction func tapOnTableView(sender: AnyObject) {
+    @IBAction func tapOnTableView(_ sender: AnyObject) {
         let g = sender as! UIGestureRecognizer
         let bounds = g.view!.bounds
-        var pt = g.locationInView(g.view)
+        var pt = g.location(in: g.view)
         pt.y -= tableView.contentOffset.y
         if pt.y <= bounds.height * leftZoneRatio {
             let cur = getCurrentPage()
@@ -75,54 +74,54 @@ class ReaderViewController: UITableViewController {
         }
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         let cur = comic.cur! as Int
         // delay it because the transform not apply now
-        dispatch_async(dispatch_get_main_queue()) {
+        DispatchQueue.main.async {
             self.tableView.contentOffset = CGPoint(x: 0, y: CGFloat(cur-1) * self.tableView.bounds.height)
         }
     }
 
-    override func viewWillDisappear(animated: Bool) {
-        comic.cur = getCurrentPage()
+    override func viewWillDisappear(_ animated: Bool) {
+        comic.cur = getCurrentPage() as NSNumber?
     }
 
-    func showGotoPageDialog(sender: AnyObject) {
-        let controller = UIAlertController(title: "Goto", message: nil, preferredStyle: .Alert)
+    func showGotoPageDialog(_ sender: AnyObject) {
+        let controller = UIAlertController(title: "Goto", message: nil, preferredStyle: .alert)
 
-        let okAction = UIAlertAction(title: "OK", style: .Default) { _ in
+        let okAction = UIAlertAction(title: "OK", style: .default) { _ in
             let pageTextField = controller.textFields![0] as UITextField
 
             guard let page = Int(pageTextField.text!) else { return }
             self.gotoPage(page)
         }
 
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
 
-        controller.addTextFieldWithConfigurationHandler { textField in
+        controller.addTextField { textField in
             textField.placeholder = self.comic.images!.count.description
 
-            NSNotificationCenter.defaultCenter().addObserverForName(UITextFieldTextDidChangeNotification, object: textField, queue: NSOperationQueue.mainQueue()) { _ in
+            NotificationCenter.default.addObserver(forName: NSNotification.Name.UITextFieldTextDidChange, object: textField, queue: OperationQueue.main) { _ in
                 guard let page = Int(textField.text!) else {
-                    okAction.enabled = false
+                    okAction.isEnabled = false
                     return
                 }
-                okAction.enabled = 1...self.comic.images!.count ~= page
+                okAction.isEnabled = 1...self.comic.images!.count ~= page
             }
         }
 
         controller.addAction(okAction)
         controller.addAction(cancelAction)
 
-        presentViewController(controller, animated: true, completion: nil)
+        present(controller, animated: true, completion: nil)
     }
 
-    private func gotoPage(page: Int) {
-        comic.cur = page
+    fileprivate func gotoPage(_ page: Int) {
+        comic.cur = page as NSNumber?
         tableView.contentOffset = CGPoint(x: 0, y: CGFloat(page-1) * tableView.frame.width)
     }
 
-    private func getComicImageFullPath(idx: Int) -> String {
+    fileprivate func getComicImageFullPath(_ idx: Int) -> String {
         let srvName = comic.server!.name
         let dir = comic.path!
         let fn = comic.images![idx]
@@ -131,25 +130,25 @@ class ReaderViewController: UITableViewController {
 
     // MARK: - Table View
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return comic.images!.count
     }
 
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return tableView.frame.width
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! ReaderCell
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! ReaderCell
 
-        cell.transform = CGAffineTransformMakeRotation(CGFloat(M_PI_2))
+        cell.transform = CGAffineTransform(rotationAngle: CGFloat(M_PI_2))
 
         weak var weakCell = cell
-        func setContentAsync(img: UIImage) {
-            dispatch_async(dispatch_get_main_queue()) {
+        func setContentAsync(_ img: UIImage) {
+            DispatchQueue.main.async {
                 if let cell = weakCell {
                     cell.contentImage.image = img
                     let cellSize = cell.contentView.frame.size
@@ -165,19 +164,19 @@ class ReaderViewController: UITableViewController {
         cell.widthConstraint.constant = img!.size.width
         cell.heightConstraint.constant = img!.size.height
 
-        let path = getComicImageFullPath(indexPath.row)
+        let path = getComicImageFullPath((indexPath as NSIndexPath).row)
         let cacheKey = "smb:" + path
 
-        PINCache.sharedCache().objectForKey(cacheKey) { _, key, obj in
+        PINCache.shared().object(forKey: cacheKey) { _, key, obj in
             if let img = obj {
                 setContentAsync(img as! UIImage)
             } else {
-                dispatch_async(smbWorkQueue) {
+                smbWorkQueue.async {
                     guard let f = self.fm.openFile(forReadingAtPath: path) else { return }
                     let data = f.readDataToEndOfFile()
                     f.closeFile()
                     guard let img = UIImage(data: data) else { return }
-                    PINCache.sharedCache().setObject(img, forKey: key, block: nil)
+                    PINCache.shared().setObject(img, forKey: key, block: nil)
                     setContentAsync(img)
                 }
             }

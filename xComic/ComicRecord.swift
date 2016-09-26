@@ -16,7 +16,7 @@ class ComicRecord: NSManagedObject {
             return images_ as? [String]
         }
         set {
-            images_ = newValue
+            images_ = newValue as NSObject?
         }
     }
 
@@ -30,8 +30,8 @@ class ComicRecord: NSManagedObject {
     }
 
     convenience init(context: NSManagedObjectContext, server: ServerEntry, title: String, thumbnail: String, path: String, images: [String]) {
-        let entity = NSEntityDescription.entityForName("ComicRecord", inManagedObjectContext: context)!
-        self.init(entity: entity, insertIntoManagedObjectContext: context)
+        let entity = NSEntityDescription.entity(forEntityName: "ComicRecord", in: context)!
+        self.init(entity: entity, insertInto: context)
         self.server = server
         self.title = title
         self.thumbnail = thumbnail

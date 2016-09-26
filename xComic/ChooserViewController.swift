@@ -9,11 +9,10 @@
 import Foundation
 import UIKit
 import SVProgressHUD
-import SMBClientSwift
 
 class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UINavigationBarDelegate {
 
-    private class Server {
+    fileprivate class Server {
         let name: String
         let ip: UInt32
         let ipStr: String
@@ -27,14 +26,14 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
 
-    private static var lastSelectRecord: (server: Server, path: String)?
+    fileprivate static var lastSelectRecord: (server: Server, path: String)?
 
-    private var servers = [Server]()
-    private var pathStack = [String]()
-    private var fileList = [String]()
-    private var curServer: Server?
+    fileprivate var servers = [Server]()
+    fileprivate var pathStack = [String]()
+    fileprivate var fileList = [String]()
+    fileprivate var curServer: Server?
 
-    private var isLoginMode = false
+    fileprivate var isLoginMode = false
 
     var chooseCompletion: (((ServerEntry, String)) -> Void)?
 
@@ -46,16 +45,16 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
         // Do any additional setup after loading the view, typically from a nib.
         let navItem = self.navBar.topItem!
         navItem.title = "Servers"
-        navItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .Plain, target: self, action: #selector(dismissSelf))
-        navItem.rightBarButtonItem = UIBarButtonItem(title: "Login", style: .Plain, target: self, action: #selector(enterLoginMode))
+        navItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(dismissSelf))
+        navItem.rightBarButtonItem = UIBarButtonItem(title: "Login", style: .plain, target: self, action: #selector(enterLoginMode))
 
         if let (server, path) = ChooserViewController.lastSelectRecord {
             servers.append(server)
             curServer = server
             pathStack.append("\(server.ipStr)")
             pushNavItemWithTitle(server.name, animated: false)
-            SVProgressHUD.showWithMaskType(.Gradient)
-            dispatch_async(smbWorkQueue) {
+            SVProgressHUD.show(with: .gradient)
+            smbWorkQueue.async {
                 let ss = SMBClient.sharedInstance
                 if !ss.isConnected(server.name, withUser: server.username) {
                     if ss.isConnected(server.name) {
@@ -63,9 +62,9 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
                     }
 
                     guard ss.connect(server.name, ip: server.ip, username: server.username, password: server.password) else {
-                        dispatch_async(dispatch_get_main_queue()) {
-                            self.pathStack.popLast()
-                            self.navBar.popNavigationItemAnimated(false)
+                        DispatchQueue.main.async {
+                            _ = self.pathStack.popLast()
+                            self.navBar.popItem(animated: false)
                             SVProgressHUD.dismiss()
                         }
                         return
@@ -74,16 +73,16 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
 
                 let fm = SMBFileManager.sharedInstance
                 guard fm.changeCurrentDirectoryPath("/\(server.ipStr)/\(path)") else {
-                    dispatch_async(dispatch_get_main_queue()) {
-                        self.pathStack.popLast()
-                        self.navBar.popNavigationItemAnimated(false)
+                    DispatchQueue.main.async {
+                        _ = self.pathStack.popLast()
+                        self.navBar.popItem(animated: false)
                         SVProgressHUD.dismiss()
                     }
                     return
                 }
-                let fileList = fm.contentsOfDirectoryAtPath("").filter({ fm.directoryExistsAtPath($0) }).sort({ $0 < $1 })
-                dispatch_async(dispatch_get_main_queue()) {
-                    for p in path.componentsSeparatedByString("/") {
+                let fileList = fm.contentsOfDirectoryAtPath("").filter({ fm.directoryExistsAtPath($0) }).sorted(by: { $0 < $1 })
+                DispatchQueue.main.async {
+                    for p in path.components(separatedBy: "/") {
                         self.pathStack.append(p)
                         self.pushNavItemWithTitle(p, animated: false)
                     }
@@ -94,22 +93,22 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
         }
 
-        SMBClient.sharedInstance.startDiscoveryWithTimeout(added:
+        _ = SMBClient.sharedInstance.startDiscoveryWithTimeout(added:
             { entry in
-                if self.servers.indexOf({ $0.name == entry.name }) == nil {
+                if self.servers.index(where: { $0.name == entry.name }) == nil {
                     self.servers.append(Server(name: entry.name, ip: entry.ip, ipStr: entry.ipStr()))
                     if self.pathStack.isEmpty {
-                        let indexPath = NSIndexPath(forRow: self.servers.endIndex-1, inSection: 0)
-                        self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+                        let indexPath = IndexPath(row: self.servers.endIndex-1, section: 0)
+                        self.tableView.insertRows(at: [indexPath], with: .automatic)
                     }
                 }
             }, removed:
             { entry in
-                if let idx = self.servers.indexOf({ $0.name == entry.name }) {
-                    let indexPath = NSIndexPath(forRow: idx, inSection: 0)
-                    self.servers.removeAtIndex(idx)
+                if let idx = self.servers.index(where: { $0.name == entry.name }) {
+                    let indexPath = IndexPath(row: idx, section: 0)
+                    self.servers.remove(at: idx)
                     if self.pathStack.isEmpty {
-                        self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                        self.tableView.deleteRows(at: [indexPath], with: .fade)
                     }
                 }
         })
@@ -119,35 +118,35 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
         SMBClient.sharedInstance.stopDiscovery()
     }
 
-    func dismissSelf(sender: AnyObject) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+    func dismissSelf(_ sender: AnyObject) {
+        self.dismiss(animated: true, completion: nil)
     }
 
-    func selectFolder(sender: AnyObject) {
-        let path = pathStack[1..<pathStack.endIndex].joinWithSeparator("/")
+    func selectFolder(_ sender: AnyObject) {
+        let path = pathStack[pathStack.indices.suffix(from: 1)].joined(separator: "/")
         dismissSelf(self)
         guard let srv = self.curServer else { return }
         ChooserViewController.lastSelectRecord = (srv, path)
         chooseCompletion?((ServerEntry(name: srv.name, ip: srv.ip, username: srv.username, password: srv.password), path))
     }
 
-    func enterLoginMode(sender: AnyObject) {
+    func enterLoginMode(_ sender: AnyObject) {
         let item = sender as! UIBarButtonItem
         item.title = "Done"
         item.action = #selector(exitLoginMode)
         isLoginMode = true
     }
 
-    func exitLoginMode(sender: AnyObject) {
+    func exitLoginMode(_ sender: AnyObject) {
         let item = sender as! UIBarButtonItem
         item.title = "Login"
         item.action = #selector(enterLoginMode)
         isLoginMode = false
     }
 
-    private func loginServer(idx: Int, username: String, password: String, completion: ((Bool) -> Void)?) {
-        SVProgressHUD.showWithMaskType(.Gradient)
-        dispatch_async(smbWorkQueue, {
+    fileprivate func loginServer(_ idx: Int, username: String, password: String, completion: ((Bool) -> Void)?) {
+        SVProgressHUD.show(with: .gradient)
+        smbWorkQueue.async(execute: {
             let srv = self.servers[idx]
             let sm = SMBClient.sharedInstance
 
@@ -156,17 +155,17 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
             let succ = sm.connect(srv.name, ip: srv.ip, username: username, password: password)
 
-            dispatch_async(dispatch_get_main_queue(), {
+            DispatchQueue.main.async(execute: {
                 SVProgressHUD.dismiss()
                 completion?(succ)
             })
         })
     }
 
-    private func showLogin(idx: Int, completion: ((Bool) -> Void)?) {
-        let alertController = UIAlertController(title: "Login", message: nil, preferredStyle: .Alert)
+    fileprivate func showLogin(_ idx: Int, completion: ((Bool) -> Void)?) {
+        let alertController = UIAlertController(title: "Login", message: nil, preferredStyle: .alert)
 
-        let loginAction = UIAlertAction(title: "Login", style: .Default) { _ in
+        let loginAction = UIAlertAction(title: "Login", style: .default) { _ in
             let loginTextField = alertController.textFields![0] as UITextField
             let passwordTextField = alertController.textFields![1] as UITextField
 
@@ -184,39 +183,39 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
         }
 
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { _ in
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
             completion?(false)
         }
 
-        alertController.addTextFieldWithConfigurationHandler { textField in
+        alertController.addTextField { textField in
             textField.placeholder = "Login"
         }
 
-        alertController.addTextFieldWithConfigurationHandler { textField in
+        alertController.addTextField { textField in
             textField.placeholder = "Password"
-            textField.secureTextEntry = true
+            textField.isSecureTextEntry = true
         }
 
         alertController.addAction(loginAction)
         alertController.addAction(cancelAction)
 
-        self.presentViewController(alertController, animated: true, completion: nil)
+        self.present(alertController, animated: true, completion: nil)
     }
 
-    private func pushNavItemWithTitle(title: String, animated: Bool) {
+    fileprivate func pushNavItemWithTitle(_ title: String, animated: Bool) {
         let item = UINavigationItem(title: title)
         if self.pathStack.count >= 2 {
-            item.rightBarButtonItem = UIBarButtonItem(title: "Select", style: .Plain, target: self, action: #selector(self.selectFolder))
+            item.rightBarButtonItem = UIBarButtonItem(title: "Select", style: .plain, target: self, action: #selector(self.selectFolder))
         }
-        self.navBar.pushNavigationItem(item, animated: animated)
+        self.navBar.pushItem(item, animated: animated)
     }
 
-    private func navToNext(idx: Int) {
-        func runInBackground(block: () -> (String, String, [String])?) {
-            SVProgressHUD.showWithMaskType(.Gradient)
-            dispatch_async(smbWorkQueue, {
+    fileprivate func navToNext(_ idx: Int) {
+        func runInBackground(_ block: @escaping () -> (String, String, [String])?) {
+            SVProgressHUD.show(with: .gradient)
+            smbWorkQueue.async(execute: {
                 let ret = block()
-                dispatch_async(dispatch_get_main_queue(), {
+                DispatchQueue.main.async(execute: {
                     if let (fn, title, fileList) = ret {
                         self.pathStack.append(fn)
                         self.pushNavItemWithTitle(title, animated: true)
@@ -240,9 +239,9 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
                     guard SMBClient.sharedInstance.connect(server.name, ip: server.ip) else { return nil }
                 }
 
-                fm.changeCurrentDirectoryPath("/")
+                _ = fm.changeCurrentDirectoryPath("/")
                 guard fm.changeCurrentDirectoryPath(fn) else { return nil }
-                let fileList = fm.contentsOfDirectoryAtPath("").filter({ fm.directoryExistsAtPath($0) }).sort({ $0 < $1 })
+                let fileList = fm.contentsOfDirectoryAtPath("").filter({ fm.directoryExistsAtPath($0) }).sorted(by: { $0 < $1 })
                 self.curServer = self.servers[idx]
                 return (fn, title, fileList)
             })
@@ -253,38 +252,38 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
             runInBackground({
                 guard fm.directoryExistsAtPath(fn) else { return nil }
                 guard fm.changeCurrentDirectoryPath(fn) else { return nil }
-                let fileList = fm.contentsOfDirectoryAtPath("").filter({ fm.directoryExistsAtPath($0) }).sort({ $0 < $1 })
+                let fileList = fm.contentsOfDirectoryAtPath("").filter({ fm.directoryExistsAtPath($0) }).sorted(by: { $0 < $1 })
                 return (fn, title, fileList)
             })
         }
     }
 
-    func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
+    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         if isLoginMode {
-            showLogin(indexPath.row) { succ in
+            showLogin((indexPath as NSIndexPath).row) { succ in
                 guard succ else { return }
                 self.exitLoginMode(self.navBar.topItem!.rightBarButtonItem!)
-                self.navToNext(indexPath.row)
+                self.navToNext((indexPath as NSIndexPath).row)
             }
         } else {
-            navToNext(indexPath.row)
+            navToNext((indexPath as NSIndexPath).row)
         }
 
         return nil
     }
 
-    func navigationBar(navigationBar: UINavigationBar, shouldPopItem item: UINavigationItem) -> Bool {
-        pathStack.popLast()
+    func navigationBar(_ navigationBar: UINavigationBar, shouldPop item: UINavigationItem) -> Bool {
+        _ = pathStack.popLast()
         if pathStack.isEmpty {
             self.curServer = nil
             tableView.reloadData()
             return true
         }
 
-        let path = "/" + pathStack.joinWithSeparator("/")
+        let path = "/" + pathStack.joined(separator: "/")
 
-        SVProgressHUD.showWithMaskType(.Gradient)
-        dispatch_async(smbWorkQueue, {
+        SVProgressHUD.show(with: .gradient)
+        smbWorkQueue.async(execute: {
             let fm = SMBFileManager.sharedInstance
             let fileList: [String]?
             if fm.changeCurrentDirectoryPath(path) {
@@ -293,7 +292,7 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
                 fileList = nil
             }
 
-            dispatch_async(dispatch_get_main_queue(), {
+            DispatchQueue.main.async(execute: {
                 if fileList != nil {
                     self.fileList = fileList!
                 } else {
@@ -311,12 +310,12 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
 
     // MARK: - Segues
 
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     }
 
     // MARK: - Table View
 
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if pathStack.isEmpty {
             return servers.count
         } else {
@@ -324,14 +323,14 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
 
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
 
         if pathStack.isEmpty {
-            let srv = self.servers[indexPath.row]
+            let srv = self.servers[(indexPath as NSIndexPath).row]
             cell.textLabel!.text = "\(srv.name) + \(srv.ipStr)"
         } else {
-            cell.textLabel!.text = self.fileList[indexPath.row]
+            cell.textLabel!.text = self.fileList[(indexPath as NSIndexPath).row]
         }
 
         return cell

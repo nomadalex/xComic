@@ -9,12 +9,23 @@
 
 import UIKit
 import ImageIO
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
 
 extension UIImage {
 
-    public class func gifWithData(data: NSData) -> UIImage? {
+    public class func gifWithData(_ data: Data) -> UIImage? {
         // Create source from data
-        guard let source = CGImageSourceCreateWithData(data, nil) else {
+        guard let source = CGImageSourceCreateWithData(data as CFData, nil) else {
             print("SwiftGif: Source for the image does not exist")
             return nil
         }
@@ -23,16 +34,16 @@ extension UIImage {
         return UIImage.animatedImageWithSource(source)
     }
 
-    public class func gifWithURL(gifUrl:String) -> UIImage? {
+    public class func gifWithURL(_ gifUrl:String) -> UIImage? {
         // Validate URL
-        guard let bundleURL:NSURL? = NSURL(string: gifUrl)
+        guard let bundleURL = URL(string: gifUrl)
             else {
                 print("SwiftGif: This image named \"\(gifUrl)\" does not exist")
                 return nil
         }
 
         // Validate data
-        guard let imageData = NSData(contentsOfURL: bundleURL!) else {
+        guard let imageData = try? Data(contentsOf: bundleURL) else {
             print("SwiftGif: Cannot turn image named \"\(gifUrl)\" into NSData")
             return nil
         }
@@ -40,16 +51,16 @@ extension UIImage {
         return gifWithData(imageData)
     }
 
-    public class func gifWithName(name: String) -> UIImage? {
+    public class func gifWithName(_ name: String) -> UIImage? {
         // Check for existance of gif
-        guard let bundleURL = NSBundle.mainBundle()
-          .URLForResource(name, withExtension: "gif") else {
+        guard let bundleURL = Bundle.main
+          .url(forResource: name, withExtension: "gif") else {
             print("SwiftGif: This image named \"\(name)\" does not exist")
             return nil
         }
 
         // Validate data
-        guard let imageData = NSData(contentsOfURL: bundleURL) else {
+        guard let imageData = try? Data(contentsOf: bundleURL) else {
             print("SwiftGif: Cannot turn image named \"\(name)\" into NSData")
             return nil
         }
@@ -57,24 +68,24 @@ extension UIImage {
         return gifWithData(imageData)
     }
 
-    class func delayForImageAtIndex(index: Int, source: CGImageSource!) -> Double {
+    class func delayForImageAtIndex(_ index: Int, source: CGImageSource!) -> Double {
         var delay = 0.1
 
         // Get dictionaries
         let cfProperties = CGImageSourceCopyPropertiesAtIndex(source, index, nil)
-        let gifProperties: CFDictionaryRef = unsafeBitCast(
+        let gifProperties: CFDictionary = unsafeBitCast(
             CFDictionaryGetValue(cfProperties,
-                unsafeAddressOf(kCGImagePropertyGIFDictionary)),
-            CFDictionary.self)
+                Unmanaged.passUnretained(kCGImagePropertyGIFDictionary).toOpaque()),
+            to: CFDictionary.self)
 
         // Get delay time
         var delayObject: AnyObject = unsafeBitCast(
             CFDictionaryGetValue(gifProperties,
-                unsafeAddressOf(kCGImagePropertyGIFUnclampedDelayTime)),
-            AnyObject.self)
+                Unmanaged.passUnretained(kCGImagePropertyGIFUnclampedDelayTime).toOpaque()),
+            to: AnyObject.self)
         if delayObject.doubleValue == 0 {
             delayObject = unsafeBitCast(CFDictionaryGetValue(gifProperties,
-                unsafeAddressOf(kCGImagePropertyGIFDelayTime)), AnyObject.self)
+                Unmanaged.passUnretained(kCGImagePropertyGIFDelayTime).toOpaque()), to: AnyObject.self)
         }
 
         delay = delayObject as! Double
@@ -88,7 +99,7 @@ extension UIImage {
         return delay
     }
 
-    class func gcdForPair(a: Int?, _ b: Int?) -> Int {
+    class func gcdForPair(_ a: Int?, _ b: Int?) -> Int {
         var a = a
         var b = b
         // Check if one of them is nil
@@ -123,7 +134,7 @@ extension UIImage {
         }
     }
 
-    class func gcdForArray(array: Array<Int>) -> Int {
+    class func gcdForArray(_ array: Array<Int>) -> Int {
         if array.isEmpty {
             return 1
         }
@@ -137,9 +148,9 @@ extension UIImage {
         return gcd
     }
 
-    class func animatedImageWithSource(source: CGImageSource) -> UIImage? {
+    class func animatedImageWithSource(_ source: CGImageSource) -> UIImage? {
         let count = CGImageSourceGetCount(source)
-        var images = [CGImageRef]()
+        var images = [CGImage]()
         var delays = [Int]()
 
         // Fill arrays
@@ -173,7 +184,7 @@ extension UIImage {
         var frame: UIImage
         var frameCount: Int
         for i in 0..<count {
-            frame = UIImage(CGImage: images[Int(i)])
+            frame = UIImage(cgImage: images[Int(i)])
             frameCount = Int(delays[Int(i)] / gcd)
 
             for _ in 0..<frameCount {
@@ -182,7 +193,7 @@ extension UIImage {
         }
 
         // Heyhey
-        let animation = UIImage.animatedImageWithImages(frames,
+        let animation = UIImage.animatedImage(with: frames,
             duration: Double(duration) / 1000.0)
 
         return animation

@@ -9,11 +9,11 @@
 import Foundation
 import libdsm
 
-public class SMBFileHandle: NSObject {
-    private var session: COpaquePointer = nil
-    private var fd: smb_fd = 0
+open class SMBFileHandle: NSObject {
+    fileprivate var session: OpaquePointer? = nil
+    fileprivate var fd: smb_fd = 0
 
-    internal init(session: COpaquePointer, fd: smb_fd) {
+    internal init(session: OpaquePointer, fd: smb_fd) {
         self.session = session
         self.fd = fd
     }
@@ -22,67 +22,67 @@ public class SMBFileHandle: NSObject {
         closeFile()
     }
 
-    public var offsetInFile: UInt64 {
+    open var offsetInFile: UInt64 {
         get {
             return UInt64(smb_fseek(session, fd, 0, Int32(SMB_SEEK_CUR)))
         }
     }
 
-    public var lengthOfFile: UInt64 {
+    open var lengthOfFile: UInt64 {
         get {
             return smb_stat_get(smb_stat_fd(session, fd), SMB_STAT_SIZE)
         }
     }
 
-    public func readDataToEndOfFile() -> NSData {
+    open func readDataToEndOfFile() -> Data {
         let offset = offsetInFile
         let length = lengthOfFile
         let (delta, _) = UInt64.subtractWithOverflow(length, offset)
         return readDataOfLength(Int(delta))
     }
 
-    public func readDataOfLength(length: Int) -> NSData {
-        if let data = NSMutableData(length: length) {
-            var ptr = UnsafeMutablePointer<Int8>(data.mutableBytes)
-            var rest = data.length
+    open func readDataOfLength(_ length: Int) -> Data {
+        var data = Data(count: length)
+        return data.withUnsafeMutableBytes { (bytes: UnsafeMutablePointer<UInt8>) -> Data in
+            var ptr = bytes
+            var rest = data.count
             while (rest > 0) {
                 let readed = smb_fread(session, fd, ptr, rest)
                 if readed < 0 {
-                    return NSData()
+                    return Data()
                 }
-                ptr = ptr.advancedBy(readed)
+                ptr = ptr.advanced(by: readed)
                 rest = rest - readed
             }
             return data
         }
-        return NSData()
     }
 
-    public func writeData(data: NSData) -> Bool {
-        var ptr = unsafeBitCast(data.bytes, UnsafeMutablePointer<Int8>.self)
-        var rest = data.length
+    open func writeData(_ data: Data) -> Bool {
+        var ptr = unsafeBitCast((data as NSData).bytes, to: UnsafeMutablePointer<Int8>.self)
+        var rest = data.count
         while (rest > 0) {
             let writed = smb_fwrite(session, fd, ptr, rest)
             if writed < 0 {
                 return false
             }
-            ptr = ptr.advancedBy(writed)
+            ptr = ptr.advanced(by: writed)
             rest = rest - writed
         }
         return true
     }
 
-    public func seekToEndOfFile() -> UInt64 {
+    open func seekToEndOfFile() -> UInt64 {
         let length = lengthOfFile
         smb_fseek(session, fd, off_t(lengthOfFile), Int32(SMB_SEEK_SET))
         return length
     }
 
-    public func seekToFileOffset(offset: UInt64) {
+    open func seekToFileOffset(_ offset: UInt64) {
         smb_fseek(session, fd, off_t(offset), Int32(SMB_SEEK_SET))
     }
 
-    public func closeFile() {
+    open func closeFile() {
         if fd != 0 {
             smb_fclose(session, fd)
             fd = 0
