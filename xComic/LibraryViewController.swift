@@ -74,7 +74,9 @@ class LibraryViewController: UITableViewController, NSFetchedResultsControllerDe
         menu.addAction(UIAlertAction(title: "Clear Cache", style: .default, handler: clearCache))
         menu.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 
-        menu.popoverPresentationController!.barButtonItem = sender as? UIBarButtonItem
+        if let con = menu.popoverPresentationController {
+            con.barButtonItem = sender as? UIBarButtonItem
+        }
         self.present(menu, animated: true, completion: nil)
     }
 
