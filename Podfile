@@ -1,7 +1,5 @@
 platform :ios, '8.0'
 
-source "git@git.oschina.net:akuandev/Specs.git"
-
 target 'xComic' do
   use_frameworks!
 
