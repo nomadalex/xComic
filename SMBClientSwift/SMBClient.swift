@@ -27,7 +27,7 @@ public struct SMBServerEntry {
     }
 }
 
-open class SMBClient: NSObject {
+public class SMBClient: NSObject {
 
     fileprivate struct Server {
         let name: String
@@ -37,7 +37,7 @@ open class SMBClient: NSObject {
         let pass: String
     }
 
-    open static let sharedInstance = SMBClient()
+    public static let sharedInstance = SMBClient()
 
     fileprivate var nameService: OpaquePointer = netbios_ns_new()
 
@@ -49,7 +49,7 @@ open class SMBClient: NSObject {
 
     fileprivate var connectedServers = [String: Server]()
 
-    open var discovering: Bool {
+    public var discovering: Bool {
         get { return _discovering }
     }
 
@@ -59,19 +59,19 @@ open class SMBClient: NSObject {
         netbios_ns_destroy(nameService)
     }
 
-    open func resolveIPWithName(_ name: String) -> UInt32? {
+    public func resolveIPWithName(_ name: String) -> UInt32? {
         var ip: UInt32 = 0
         guard netbios_ns_resolve(nameService, name, Int8(NETBIOS_FILESERVER), &ip) == 0 else { return nil }
         return ip
     }
 
-    open func lookupNameByIP(_ ip: UInt32) -> String? {
+    public func lookupNameByIP(_ ip: UInt32) -> String? {
         let name = netbios_ns_inverse(nameService, ip)
         guard name != nil else { return nil }
         return String(cString: name!)
     }
 
-    open func startDiscoveryWithTimeout(_ timeout: TimeInterval = 0, added: @escaping (SMBServerEntry) -> Void, removed: @escaping (SMBServerEntry) -> Void) -> Bool {
+    public func startDiscoveryWithTimeout(_ timeout: TimeInterval = 0, added: @escaping (SMBServerEntry) -> Void, removed: @escaping (SMBServerEntry) -> Void) -> Bool {
         if self.discovering {
             self.stopDiscovery()
         }
@@ -113,7 +113,7 @@ open class SMBClient: NSObject {
         }
     }
 
-    open func stopDiscovery() {
+    public func stopDiscovery() {
         self._discovering = false
         self.onNetBIOSEntryAdded = nil
         self.onNetBIOSEntryRemoved = nil
@@ -122,16 +122,16 @@ open class SMBClient: NSObject {
         self.nameService = netbios_ns_new()
     }
 
-    open func isConnected(_ name: String) -> Bool {
+    public func isConnected(_ name: String) -> Bool {
         return connectedServers[name] != nil
     }
 
-    open func isConnected(_ name: String, withUser username: String) -> Bool {
+    public func isConnected(_ name: String, withUser username: String) -> Bool {
         guard let srv = connectedServers[name] else { return false }
         return srv.user == username
     }
 
-    open func connect(_ name: String, ip: UInt32, username: String = "", password: String = "") -> Bool {
+    public func connect(_ name: String, ip: UInt32, username: String = "", password: String = "") -> Bool {
         if connectedServers[name] != nil {
             return false
         }
@@ -155,7 +155,7 @@ open class SMBClient: NSObject {
         return true
     }
 
-    open func disconnect(_ name: String) {
+    public func disconnect(_ name: String) {
         if let srv = connectedServers[name] {
             SMBFileManager.sharedInstance.removeSession(srv.name, ipStr: ipToStr(srv.ip))
             smb_session_destroy(srv.session)

@@ -9,7 +9,7 @@
 import Foundation
 import libdsm
 
-open class SMBFileHandle: NSObject {
+public class SMBFileHandle: NSObject {
     fileprivate var session: OpaquePointer? = nil
     fileprivate var fd: smb_fd = 0
 
@@ -22,26 +22,26 @@ open class SMBFileHandle: NSObject {
         closeFile()
     }
 
-    open var offsetInFile: UInt64 {
+    public var offsetInFile: UInt64 {
         get {
             return UInt64(smb_fseek(session, fd, 0, Int32(SMB_SEEK_CUR)))
         }
     }
 
-    open var lengthOfFile: UInt64 {
+    public var lengthOfFile: UInt64 {
         get {
             return smb_stat_get(smb_stat_fd(session, fd), SMB_STAT_SIZE)
         }
     }
 
-    open func readDataToEndOfFile() -> Data {
+    public func readDataToEndOfFile() -> Data {
         let offset = offsetInFile
         let length = lengthOfFile
         let (delta, _) = UInt64.subtractWithOverflow(length, offset)
         return readDataOfLength(Int(delta))
     }
 
-    open func readDataOfLength(_ length: Int) -> Data {
+    public func readDataOfLength(_ length: Int) -> Data {
         var data = Data(count: length)
         return data.withUnsafeMutableBytes { (bytes: UnsafeMutablePointer<UInt8>) -> Data in
             var ptr = bytes
@@ -58,7 +58,7 @@ open class SMBFileHandle: NSObject {
         }
     }
 
-    open func writeData(_ data: Data) -> Bool {
+    public func writeData(_ data: Data) -> Bool {
         return data.withUnsafeBytes { (bytes: UnsafePointer<UInt8>) -> Bool in
             var ptr = UnsafeMutablePointer<UInt8>.init(mutating: bytes);
             var rest = data.count
@@ -74,17 +74,17 @@ open class SMBFileHandle: NSObject {
         }
     }
 
-    open func seekToEndOfFile() -> UInt64 {
+    public func seekToEndOfFile() -> UInt64 {
         let length = lengthOfFile
         smb_fseek(session, fd, off_t(lengthOfFile), Int32(SMB_SEEK_SET))
         return length
     }
 
-    open func seekToFileOffset(_ offset: UInt64) {
+    public func seekToFileOffset(_ offset: UInt64) {
         smb_fseek(session, fd, off_t(offset), Int32(SMB_SEEK_SET))
     }
 
-    open func closeFile() {
+    public func closeFile() {
         if fd != 0 {
             smb_fclose(session, fd)
             fd = 0
