@@ -34,7 +34,7 @@ class ReaderViewController: UITableViewController {
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Goto", style: .plain, target: self, action: #selector(showGotoPageDialog))
 
-        tableView.transform = CGAffineTransform(rotationAngle: -CGFloat(M_PI_2))
+        tableView.transform = CGAffineTransform(rotationAngle: -CGFloat(Float.pi/2))
         tableView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, 0, tableView.bounds.height - 7)
     }
 
@@ -75,7 +75,7 @@ class ReaderViewController: UITableViewController {
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        let cur = comic.cur! as Int
+        let cur = comic.cur! as! Int
         // delay it because the transform not apply now
         DispatchQueue.main.async {
             self.tableView.contentOffset = CGPoint(x: 0, y: CGFloat(cur-1) * self.tableView.bounds.height)
@@ -144,7 +144,7 @@ class ReaderViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! ReaderCell
 
-        cell.transform = CGAffineTransform(rotationAngle: CGFloat(M_PI_2))
+        cell.transform = CGAffineTransform(rotationAngle: CGFloat(Float.pi/2))
 
         weak var weakCell = cell
         func setContentAsync(_ img: UIImage) {

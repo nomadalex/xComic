@@ -99,7 +99,7 @@ open class SMBClient: NSObject {
         self.onNetBIOSEntryAdded = added
         self.onNetBIOSEntryRemoved = removed
 
-        let timeo = timeout <= DBL_EPSILON ? self.defaultDiscoveryTimeout : timeout
+        let timeo = timeout <= .ulpOfOne ? self.defaultDiscoveryTimeout : timeout
 
         let ret = netbios_ns_discover_start(self.nameService, UInt32(timeo), &callbacks)
 

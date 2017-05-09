@@ -267,7 +267,7 @@ class LibraryViewController: UITableViewController, NSFetchedResultsControllerDe
         case .move:
             //tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
             //tableView.insertRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
-            print("move \(indexPath) \(newIndexPath)")
+            print("move \(String(describing: indexPath)) \(String(describing: newIndexPath))")
         }
     }
     

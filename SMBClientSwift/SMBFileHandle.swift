@@ -59,17 +59,19 @@ open class SMBFileHandle: NSObject {
     }
 
     open func writeData(_ data: Data) -> Bool {
-        var ptr = unsafeBitCast((data as NSData).bytes, to: UnsafeMutablePointer<Int8>.self)
-        var rest = data.count
-        while (rest > 0) {
-            let writed = smb_fwrite(session, fd, ptr, rest)
-            if writed < 0 {
-                return false
+        return data.withUnsafeBytes { (bytes: UnsafePointer<UInt8>) -> Bool in
+            var ptr = UnsafeMutablePointer<UInt8>.init(mutating: bytes);
+            var rest = data.count
+            while (rest > 0) {
+                let writed = smb_fwrite(session, fd, ptr, rest)
+                if writed < 0 {
+                    return false
+                }
+                ptr = ptr.advanced(by: writed)
+                rest = rest - writed
             }
-            ptr = ptr.advanced(by: writed)
-            rest = rest - writed
+            return true
         }
-        return true
     }
 
     open func seekToEndOfFile() -> UInt64 {
