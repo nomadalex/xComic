@@ -54,7 +54,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         initCoreData()
-        let controller = (self.window?.rootViewController as! UINavigationController).topViewController as! LibraryViewController
+        let controller = (self.window?.rootViewController as! UINavigationController).topViewController as! ChooserViewController
         controller.managedObjectContext = managedObjectContext
         controller.documentURL = documentURL
         return true

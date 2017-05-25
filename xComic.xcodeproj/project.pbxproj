@@ -15,7 +15,6 @@
 		4B40C4ED1CCD907B0082027B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B40C4EB1CCD907B0082027B /* LaunchScreen.storyboard */; };
 		4B40C4F81CCD907B0082027B /* xComicUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B40C4F71CCD907B0082027B /* xComicUITests.swift */; };
 		4B40C5041CCD94A70082027B /* dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B40C5031CCD94A70082027B /* dummy.m */; };
-		4B40C51E1CCDAC4A0082027B /* LibraryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B40C51D1CCDAC4A0082027B /* LibraryViewController.swift */; };
 		4B5B7ECF1D9910D1001BB8C0 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B40C5151CCD955C0082027B /* libiconv.tbd */; };
 		4B5B7ED01D9910E0001BB8C0 /* libtasn1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B5ECB601CD6779300F9C644 /* libtasn1.a */; };
 		4B5B7ED11D9910EA001BB8C0 /* libdsm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B5ECB621CD6779C00F9C644 /* libdsm.a */; };
@@ -71,7 +70,6 @@
 		4B40C5021CCD94A70082027B /* xComic-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "xComic-Bridging-Header.h"; sourceTree = "<group>"; };
 		4B40C5031CCD94A70082027B /* dummy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = dummy.m; sourceTree = "<group>"; };
 		4B40C5151CCD955C0082027B /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
-		4B40C51D1CCDAC4A0082027B /* LibraryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryViewController.swift; sourceTree = "<group>"; };
 		4B5ECB601CD6779300F9C644 /* libtasn1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtasn1.a; path = SMBClientSwift/libtasn1/libtasn1.a; sourceTree = "<group>"; };
 		4B5ECB621CD6779C00F9C644 /* libdsm.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libdsm.a; path = SMBClientSwift/libdsm/libdsm.a; sourceTree = "<group>"; };
 		4B5ECB651CD67ECA00F9C644 /* SMBClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SMBClient.swift; sourceTree = "<group>"; };
@@ -156,7 +154,6 @@
 				4B40C5031CCD94A70082027B /* dummy.m */,
 				4B40C4EE1CCD907B0082027B /* Info.plist */,
 				4B40C4EB1CCD907B0082027B /* LaunchScreen.storyboard */,
-				4B40C51D1CCDAC4A0082027B /* LibraryViewController.swift */,
 				4B40C4E61CCD907B0082027B /* Main.storyboard */,
 				4B7AA9E91CD0770800362FB8 /* Model.xcdatamodeld */,
 				4BC5BF7D1CD2750400C8985C /* placeholder.gif */,
@@ -412,7 +409,6 @@
 				4B5B7ED31D991112001BB8C0 /* SMBFileHandle.swift in Sources */,
 				4B7AA9EB1CD0770800362FB8 /* Model.xcdatamodeld in Sources */,
 				4BC5BF451CD1FF8600C8985C /* ComicRecord+CoreDataProperties.swift in Sources */,
-				4B40C51E1CCDAC4A0082027B /* LibraryViewController.swift in Sources */,
 				4B5B7ED41D991115001BB8C0 /* SMBFileManager.swift in Sources */,
 				4B5B7ED21D991104001BB8C0 /* SMBClient.swift in Sources */,
 				4B40C4E31CCD907B0082027B /* AppDelegate.swift in Sources */,

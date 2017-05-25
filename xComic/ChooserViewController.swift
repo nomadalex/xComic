@@ -8,7 +8,10 @@
 
 import Foundation
 import UIKit
+import CoreData
 import SVProgressHUD
+
+let smbWorkQueue = DispatchQueue(label: "com.ifreedomlife.xComic", attributes: [])
 
 class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UINavigationBarDelegate {
 
@@ -35,17 +38,19 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
 
     fileprivate var isLoginMode = false
 
-    var chooseCompletion: (((ServerEntry, String)) -> Void)?
-
     @IBOutlet var navBar: UINavigationBar!
     @IBOutlet var tableView: UITableView!
+
+    var documentURL: URL!
+    var managedObjectContext: NSManagedObjectContext!
+
+    private var selectedComic: ComicRecord?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         let navItem = self.navBar.topItem!
         navItem.title = "Servers"
-        navItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(dismissSelf))
         navItem.rightBarButtonItem = UIBarButtonItem(title: "Login", style: .plain, target: self, action: #selector(enterLoginMode))
 
         if let (server, path) = ChooserViewController.lastSelectRecord {
@@ -118,16 +123,70 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
         SMBClient.sharedInstance.stopDiscovery()
     }
 
-    func dismissSelf(_ sender: AnyObject) {
-        self.dismiss(animated: true, completion: nil)
+    func selectFolder(_ sender: AnyObject) {
+        guard let srv = self.curServer else { return }
+        let path = pathStack[pathStack.indices.suffix(from: 1)].joined(separator: "/")
+        ChooserViewController.lastSelectRecord = (srv, path)
+
+        SVProgressHUD.show(with: .gradient)
+        smbWorkQueue.async(execute: { [unowned self] in
+            let moc = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+            moc.parent = self.managedObjectContext
+            self.selectedComic = self.addComicAtPath(moc, server: ServerEntry(name: srv.name, ip: srv.ip, username: srv.username, password: srv.password), path: path)
+
+            do {
+                try moc.save()
+            } catch {
+                fatalError("Can not save comic records")
+            }
+            DispatchQueue.main.async(execute: {
+                SVProgressHUD.dismiss()
+                if self.selectedComic != nil {
+                    self.performSegue(withIdentifier: "showComic", sender: nil)
+                }
+            })
+        })
     }
 
-    func selectFolder(_ sender: AnyObject) {
-        let path = pathStack[pathStack.indices.suffix(from: 1)].joined(separator: "/")
-        dismissSelf(self)
-        guard let srv = self.curServer else { return }
-        ChooserViewController.lastSelectRecord = (srv, path)
-        chooseCompletion?((ServerEntry(name: srv.name, ip: srv.ip, username: srv.username, password: srv.password), path))
+    private func getImagesInDir(_ path: String) -> [String] {
+        let imgs = SMBFileManager.sharedInstance.contentsOfDirectoryAtPath(path).filter { fn in
+            guard fn[fn.startIndex] != "." else { return false }
+            let ext = (fn as NSString).pathExtension
+            switch ext.lowercased() {
+            case "jpg", "jpeg", "png": return true
+            default: return false
+            }
+        }
+        return imgs
+    }
+
+    private func addComicAtPath(_ context: NSManagedObjectContext, server: ServerEntry, path: String) -> ComicRecord? {
+        let fullPath = "/\(server.name)/\(path)"
+        let imgs = getImagesInDir(fullPath).sorted{ $0 < $1 }
+        guard !imgs.isEmpty else { return nil }
+        let dirName = (path as NSString).lastPathComponent
+        var comic = findComic(context, title: dirName)
+        if let c = comic {
+            c.server = server
+            c.path = path
+            c.images = imgs
+            c.cur = max(0, min(imgs.count, Int(c.cur ?? 0))) as NSNumber
+        } else {
+            comic = ComicRecord(context: context, server: server, title: dirName, thumbnail: "", path: path, images: imgs)
+        }
+        return comic
+    }
+    
+    private func findComic(_ context: NSManagedObjectContext, title: String) -> ComicRecord? {
+        let r = NSFetchRequest<ComicRecord>()
+        r.predicate = NSPredicate(format: "title == %@", title)
+        do {
+            let comics = try context.fetch(r)
+            guard comics.count > 0 else { return nil }
+            return comics[0]
+        } catch {
+            fatalError("Failed to fetch employees: \(error)")
+        }
     }
 
     func enterLoginMode(_ sender: AnyObject) {
@@ -311,6 +370,10 @@ class ChooserViewController: UIViewController, UITableViewDelegate, UITableViewD
     // MARK: - Segues
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showComic" {
+            let controller = segue.destination as! ReaderViewController
+            controller.comic = selectedComic
+        }
     }
 
     // MARK: - Table View
